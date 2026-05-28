@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap");
 
 /* ── TOKENS ──────────────────────────────────────────────── */
 :root {
@@ -20,7 +20,7 @@
   --white:         oklch(99.5% 0.002 90);
   --footer-bg:     oklch(13% 0.018 240);
 
-  font-family: "Inter", sans-serif;
+  font-family: "Outfit", sans-serif;
   color: var(--ink);
   background: var(--base);
   -webkit-font-smoothing: antialiased;
@@ -53,17 +53,8 @@ button {
 img { display: block; }
 
 /* ── GSAP REVEAL INITIAL STATE ───────────────────────────── */
-
-.reveal-section,
-.cat-grid .cat-card,
-.delivery-cards .delivery-card,
-.process-list .process-step,
-.plans-grid .plan-card,
-.reviews-grid .review-card,
-.trust-list .trust-item,
-.faq-list .faq-item {
-  opacity: 0;
-}
+/* Initial opacity set by GSAP at runtime, not CSS — prevents blank
+   content if JS is slow or ScrollTrigger doesn't fire. */
 
 @media (prefers-reduced-motion: reduce) {
   .reveal-section,
@@ -167,6 +158,8 @@ img { display: block; }
   box-shadow: 0 16px 36px oklch(56% 0.19 18 / 0.36);
 }
 
+.primary-btn:active { transform: translateY(0) scale(0.98); }
+
 .primary-btn:focus-visible {
   outline: 3px solid oklch(56% 0.19 18 / 0.4);
   outline-offset: 4px;
@@ -194,6 +187,8 @@ img { display: block; }
   transform: translateY(-2px);
 }
 
+.secondary-btn:active { transform: translateY(0) scale(0.98); }
+
 .secondary-btn:focus-visible {
   outline: 3px solid oklch(56% 0.19 18 / 0.4);
   outline-offset: 4px;
@@ -203,7 +198,7 @@ img { display: block; }
 
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 100dvh;
   isolation: isolate;
   overflow: hidden;
   padding: 28px clamp(24px, 5.35vw, 88px) 200px;
@@ -356,6 +351,10 @@ img { display: block; }
   transform: translateY(-2px);
   box-shadow: 0 16px 34px oklch(56% 0.19 18 / 0.36);
 }
+
+.book-btn:active,
+.search-btn:active,
+.fleet-cta:active { transform: translateY(0) scale(0.97); }
 
 .hamburger-btn {
   display: none;
@@ -716,10 +715,38 @@ input[type="date"].booking-input { color-scheme: light; }
 
 .categories-section { background: var(--base); }
 
+/* Asymmetric bento: large featured card left + 2 stacked right */
 .cat-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 24px;
+  align-items: stretch;
+}
+
+.cat-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Featured card has taller image */
+.cat-card-featured .cat-img-wrap {
+  height: 300px;
+}
+
+/* Compact stacked cards use horizontal layout */
+.cat-card-compact {
+  flex-direction: row !important;
+}
+
+.cat-card-compact .cat-img-wrap {
+  width: 180px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.cat-card-compact .cat-body {
+  padding: 24px 24px 24px 20px;
 }
 
 .cat-card {
@@ -1037,7 +1064,7 @@ input[type="date"].booking-input { color-scheme: light; }
   font-weight: 500;
   color: var(--muted);
   margin-left: 2px;
-  font-family: "Inter", sans-serif;
+  font-family: "Outfit", sans-serif;
   letter-spacing: 0;
 }
 
@@ -1370,29 +1397,26 @@ input[type="date"].booking-input { color-scheme: light; }
   flex-direction: column;
   gap: 20px;
   padding-top: 28px;
-  border-top: 2px solid oklch(22% 0.016 240);
+  border-top: 1px solid oklch(22% 0.016 240);
   position: relative;
 }
 
-.process-step::before {
-  content: "";
-  position: absolute;
-  top: -2px;
-  left: 0;
-  width: 44px;
-  height: 2px;
-  background: var(--accent);
-  border-radius: 2px;
-}
-
 .step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--white);
   font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 64px;
+  font-size: 16px;
   font-weight: 800;
-  letter-spacing: -0.05em;
-  color: oklch(32% 0.018 240);
-  line-height: 0.92;
-  margin-bottom: -4px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  flex-shrink: 0;
+  box-shadow: 0 6px 18px oklch(56% 0.19 18 / 0.32);
 }
 
 .step-body {
@@ -1448,6 +1472,7 @@ input[type="date"].booking-input { color-scheme: light; }
 
 .plan-highlight {
   border-color: var(--accent);
+  background: oklch(98.5% 0.01 18);
   box-shadow: 0 0 0 1px var(--accent), 0 18px 48px oklch(56% 0.19 18 / 0.15);
 }
 
@@ -1620,9 +1645,9 @@ input[type="date"].booking-input { color-scheme: light; }
 }
 
 .reviews-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 
 .review-card {
@@ -2139,6 +2164,9 @@ a.final-cta-contact-item:hover { color: var(--white); }
 
   /* categories */
   .cat-grid { grid-template-columns: 1fr; gap: 16px; }
+  .cat-card-compact { flex-direction: column !important; }
+  .cat-card-compact .cat-img-wrap { width: 100%; height: 180px; }
+  .cat-card-featured .cat-img-wrap { height: 200px; }
 
   /* fleet */
   .fleet-header-row { flex-direction: column; align-items: flex-start; gap: 20px; }
@@ -2204,7 +2232,9 @@ a.final-cta-contact-item:hover { color: var(--white); }
   .booking-field:nth-child(2) { border-right: none; margin-right: 0; }
   .booking-field:nth-child(3) { border-right: none; margin-right: 0; }
 
-  .cat-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .cat-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .cat-card-compact { flex-direction: column !important; }
+  .cat-card-compact .cat-img-wrap { width: 100%; height: 160px; }
   .fleet-hero-row { grid-template-columns: 1fr 1fr; }
   .fleet-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .plans-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }

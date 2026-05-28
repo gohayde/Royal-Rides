@@ -45,28 +45,22 @@ function useScrollReveal(selector: string) {
   const prefersReduced = useReducedMotion();
   useEffect(() => {
     if (prefersReduced) return;
-    const elements = gsap.utils.toArray<Element>(selector);
-    if (!elements.length) return;
-    const triggers = elements.map((el) =>
-      gsap.fromTo(
-        el,
-        { opacity: 0, y: 32 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 88%",
-            toggleActions: "play none none none",
-          },
-        }
-      )
-    );
-    return () => {
-      triggers.forEach((t) => (t.scrollTrigger?.kill(), t.kill()));
-    };
+    // Delay setup until after paint so layout is stable for getBoundingClientRect
+    const id = requestAnimationFrame(() => {
+      const elements = gsap.utils.toArray<Element>(selector);
+      if (!elements.length) return;
+      elements.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const alreadyVisible = rect.top < window.innerHeight * 0.95;
+        if (alreadyVisible) return;
+        gsap.set(el, { opacity: 0, y: 28 });
+        gsap.to(el, {
+          opacity: 1, y: 0, duration: 0.55, ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 90%", once: true },
+        });
+      });
+    });
+    return () => cancelAnimationFrame(id);
   }, [selector, prefersReduced]);
 }
 
@@ -75,33 +69,23 @@ function useStaggerReveal(containerSelector: string, childSelector: string, stag
   const prefersReduced = useReducedMotion();
   useEffect(() => {
     if (prefersReduced) return;
-    const containers = gsap.utils.toArray<Element>(containerSelector);
-    if (!containers.length) return;
-    const anims: gsap.core.Tween[] = [];
-    containers.forEach((container) => {
-      const children = container.querySelectorAll(childSelector);
-      if (!children.length) return;
-      const tween = gsap.fromTo(
-        children,
-        { opacity: 0, y: 36 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.55,
-          ease: "power3.out",
-          stagger,
-          scrollTrigger: {
-            trigger: container,
-            start: "top 85%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-      anims.push(tween);
+    const id = requestAnimationFrame(() => {
+      const containers = gsap.utils.toArray<Element>(containerSelector);
+      if (!containers.length) return;
+      containers.forEach((container) => {
+        const rect = container.getBoundingClientRect();
+        const alreadyVisible = rect.top < window.innerHeight * 0.95;
+        if (alreadyVisible) return;
+        const children = container.querySelectorAll(childSelector);
+        if (!children.length) return;
+        gsap.set(children, { opacity: 0, y: 28 });
+        gsap.to(children, {
+          opacity: 1, y: 0, duration: 0.5, ease: "power3.out", stagger,
+          scrollTrigger: { trigger: container, start: "top 88%", once: true },
+        });
+      });
     });
-    return () => {
-      anims.forEach((a) => (a.scrollTrigger?.kill(), a.kill()));
-    };
+    return () => cancelAnimationFrame(id);
   }, [containerSelector, childSelector, stagger, prefersReduced]);
 }
 
@@ -478,7 +462,6 @@ function FleetSection() {
       <div className="section-inner">
         <div className="fleet-header-row reveal-section">
           <div className="section-header">
-            <span className="eyebrow">Featured rentals</span>
             <h2 className="section-title">Find Your Best Car Here</h2>
             <p className="section-sub">Browse popular cars for daily, weekly, and monthly rental in Dubai.</p>
           </div>
@@ -780,24 +763,44 @@ function App() {
             <p className="section-sub">Pick a category and check cars that fit your trip, budget, and rental duration.</p>
           </div>
           <div className="cat-grid">
-            {categories.map(({ slug, title, desc, image, tags, cta }) => (
-              <article className="cat-card" key={slug}>
-                <div className="cat-img-wrap">
-                  <img src={image} alt={`${title} rental in Dubai`} loading="lazy" />
-                </div>
-                <div className="cat-body">
-                  <h3 className="cat-title">{title}</h3>
-                  <p className="cat-desc">{desc}</p>
-                  <ul className="cat-tags" aria-label="Category highlights">
-                    {tags.map((t) => <li key={t}>{t}</li>)}
-                  </ul>
-                  <a className="cat-cta" href={WA} aria-label={`View ${title}`}>
-                    {cta}
-                    <ArrowRight size={14} strokeWidth={2.3} />
-                  </a>
-                </div>
-              </article>
-            ))}
+            {/* Featured large card */}
+            <article className="cat-card cat-card-featured" key={categories[0].slug}>
+              <div className="cat-img-wrap">
+                <img src={categories[0].image} alt={`${categories[0].title} rental in Dubai`} loading="lazy" />
+              </div>
+              <div className="cat-body">
+                <h3 className="cat-title">{categories[0].title}</h3>
+                <p className="cat-desc">{categories[0].desc}</p>
+                <ul className="cat-tags" aria-label="Category highlights">
+                  {categories[0].tags.map((t) => <li key={t}>{t}</li>)}
+                </ul>
+                <a className="cat-cta" href={WA} aria-label={`View ${categories[0].title}`}>
+                  {categories[0].cta}
+                  <ArrowRight size={14} strokeWidth={2.3} />
+                </a>
+              </div>
+            </article>
+            {/* Stacked smaller cards */}
+            <div className="cat-stack">
+              {categories.slice(1).map(({ slug, title, desc, image, tags, cta }) => (
+                <article className="cat-card cat-card-compact" key={slug}>
+                  <div className="cat-img-wrap">
+                    <img src={image} alt={`${title} rental in Dubai`} loading="lazy" />
+                  </div>
+                  <div className="cat-body">
+                    <h3 className="cat-title">{title}</h3>
+                    <p className="cat-desc">{desc}</p>
+                    <ul className="cat-tags" aria-label="Category highlights">
+                      {tags.map((t) => <li key={t}>{t}</li>)}
+                    </ul>
+                    <a className="cat-cta" href={WA} aria-label={`View ${title}`}>
+                      {cta}
+                      <ArrowRight size={14} strokeWidth={2.3} />
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -809,7 +812,6 @@ function App() {
       <section className="section delivery-section" id="delivery" aria-label="Doorstep delivery and airport transfers">
         <div className="section-inner delivery-inner">
           <div className="delivery-copy reveal-section">
-            <span className="eyebrow">Easy pickup and delivery</span>
             <h2 className="section-title">Car Rental Made Simple Across Dubai</h2>
             <p className="delivery-body">
               Need the car at your hotel, home, office, or airport? Message Royal Rides to check delivery and pickup options for your booking.
@@ -856,7 +858,6 @@ function App() {
       <section className="section process-section" aria-label="How to rent a car from Royal Rides">
         <div className="section-inner">
           <div className="section-header centered reveal-section">
-            <span className="eyebrow">How it works</span>
             <h2 className="section-title">Four Steps to Your Rental</h2>
             <p className="section-sub">Choose your car, share your details, confirm availability, and get ready to drive.</p>
           </div>
@@ -878,7 +879,6 @@ function App() {
       <section className="section plans-section" id="plans" aria-label="Rental plans">
         <div className="section-inner">
           <div className="section-header centered reveal-section">
-            <span className="eyebrow">Rental plans</span>
             <h2 className="section-title">Daily, Weekly, and Monthly Rentals</h2>
             <p className="section-sub">Pick a rental duration that fits your stay, routine, or business travel needs in Dubai.</p>
           </div>
@@ -907,7 +907,6 @@ function App() {
       <section className="section reviews-section" aria-label="Customer reviews">
         <div className="section-inner">
           <div className="section-header reveal-section">
-            <span className="eyebrow">What customers say</span>
             <h2 className="section-title">Feedback from Royal Rides Customers</h2>
             <p className="section-sub">Shared by customers who have rented with Royal Rides Car Rental Dubai.</p>
           </div>
@@ -929,7 +928,7 @@ function App() {
                   <div className="review-stars" aria-label="5 stars">
                     {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={15} strokeWidth={0} fill="currentColor" aria-hidden="true" />)}
                   </div>
-                  <p className="review-text">"{text}"</p>
+                  <p className="review-text">&#8220;{text}&#8221;</p>
                   <div className="review-author">
                     <strong>{name}</strong>
                     <span>{context}</span>
@@ -945,7 +944,6 @@ function App() {
       <section className="section faq-section" aria-label="Frequently asked questions">
         <div className="section-inner faq-inner">
           <div className="section-header faq-header reveal-section">
-            <span className="eyebrow">Questions answered</span>
             <h2 className="section-title">Frequently Asked Questions</h2>
             <p className="section-sub">Quick answers before you book your rental car in Dubai.</p>
           </div>
