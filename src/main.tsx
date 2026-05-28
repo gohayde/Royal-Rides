@@ -37,25 +37,23 @@ import "./styles.css";
 gsap.registerPlugin(ScrollTrigger);
 
 /* ── Easing curves ──────────────────────────────────────────── */
-const EASE_OUT_EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];
-const EASE_OUT_QUART: [number, number, number, number] = [0.25, 1, 0.5, 1];
+const EASE_EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];
+const EASE_SPRING: [number, number, number, number] = [0.32, 0.72, 0, 1];
 
-/* ── Reduced-motion aware scroll reveal hook ────────────────── */
+/* ── Scroll reveal hook ─────────────────────────────────────── */
 function useScrollReveal(selector: string) {
   const prefersReduced = useReducedMotion();
   useEffect(() => {
     if (prefersReduced) return;
-    // Delay setup until after paint so layout is stable for getBoundingClientRect
     const id = requestAnimationFrame(() => {
       const elements = gsap.utils.toArray<Element>(selector);
       if (!elements.length) return;
       elements.forEach((el) => {
         const rect = el.getBoundingClientRect();
-        const alreadyVisible = rect.top < window.innerHeight * 0.95;
-        if (alreadyVisible) return;
-        gsap.set(el, { opacity: 0, y: 28 });
+        if (rect.top < window.innerHeight * 0.95) return;
+        gsap.set(el, { opacity: 0, y: 32 });
         gsap.to(el, {
-          opacity: 1, y: 0, duration: 0.55, ease: "power3.out",
+          opacity: 1, y: 0, duration: 0.65, ease: "power3.out",
           scrollTrigger: { trigger: el, start: "top 90%", once: true },
         });
       });
@@ -74,13 +72,12 @@ function useStaggerReveal(containerSelector: string, childSelector: string, stag
       if (!containers.length) return;
       containers.forEach((container) => {
         const rect = container.getBoundingClientRect();
-        const alreadyVisible = rect.top < window.innerHeight * 0.95;
-        if (alreadyVisible) return;
+        if (rect.top < window.innerHeight * 0.95) return;
         const children = container.querySelectorAll(childSelector);
         if (!children.length) return;
-        gsap.set(children, { opacity: 0, y: 28 });
+        gsap.set(children, { opacity: 0, y: 32 });
         gsap.to(children, {
-          opacity: 1, y: 0, duration: 0.5, ease: "power3.out", stagger,
+          opacity: 1, y: 0, duration: 0.55, ease: "power3.out", stagger,
           scrollTrigger: { trigger: container, start: "top 88%", once: true },
         });
       });
@@ -298,10 +295,10 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         <span>{q}</span>
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.25, ease: EASE_OUT_QUART }}
+          transition={{ duration: 0.3, ease: EASE_SPRING }}
           style={{ display: "flex", flexShrink: 0 }}
         >
-          <ChevronDown size={20} strokeWidth={2.2} />
+          <ChevronDown size={20} strokeWidth={2} />
         </motion.span>
       </button>
       <AnimatePresence initial={false}>
@@ -311,7 +308,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: EASE_OUT_QUART }}
+            transition={{ duration: 0.35, ease: EASE_SPRING }}
             style={{ overflow: "hidden" }}
           >
             <p className="faq-a">{a}</p>
@@ -345,7 +342,7 @@ function BookingForm() {
     <form className="booking-bar" onSubmit={handleSubmit} aria-label="Quick rental inquiry">
       <div className="booking-field">
         <label className="booking-label" htmlFor="bb-location">
-          <MapPin size={15} strokeWidth={2.4} aria-hidden="true" />
+          <MapPin size={14} strokeWidth={2.2} aria-hidden="true" />
           Pickup Location
         </label>
         <input
@@ -359,7 +356,7 @@ function BookingForm() {
       </div>
       <div className="booking-field">
         <label className="booking-label" htmlFor="bb-pickup">
-          <CalendarDays size={15} strokeWidth={2.4} aria-hidden="true" />
+          <CalendarDays size={14} strokeWidth={2.2} aria-hidden="true" />
           Pickup Date
         </label>
         <input
@@ -372,7 +369,7 @@ function BookingForm() {
       </div>
       <div className="booking-field">
         <label className="booking-label" htmlFor="bb-return">
-          <CalendarDays size={15} strokeWidth={2.4} aria-hidden="true" />
+          <CalendarDays size={14} strokeWidth={2.2} aria-hidden="true" />
           Return Date
         </label>
         <input
@@ -385,7 +382,7 @@ function BookingForm() {
       </div>
       <div className="booking-field">
         <label className="booking-label" htmlFor="bb-type">
-          <Car size={15} strokeWidth={2.4} aria-hidden="true" />
+          <Car size={14} strokeWidth={2.2} aria-hidden="true" />
           Car Type
         </label>
         <select id="bb-type" className="booking-input booking-select" value={carType} onChange={(e) => setCarType(e.target.value)}>
@@ -396,7 +393,7 @@ function BookingForm() {
         </select>
       </div>
       <button className="search-btn" type="submit" aria-label="Send inquiry on WhatsApp">
-        <MessageCircle size={28} strokeWidth={2.4} />
+        <MessageCircle size={18} strokeWidth={2.2} />
         <span>Check on WhatsApp</span>
       </button>
     </form>
@@ -416,7 +413,7 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
     <div className="mobile-menu-overlay" role="dialog" aria-modal="true" aria-label="Navigation menu">
       <div className="mobile-menu-panel">
         <button className="mobile-menu-close" onClick={onClose} aria-label="Close menu">
-          <X size={24} strokeWidth={2.2} />
+          <X size={22} strokeWidth={2} />
         </button>
         <nav className="mobile-nav" aria-label="Mobile navigation">
           <a href="#home" onClick={onClose}>Home</a>
@@ -427,11 +424,11 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
         </nav>
         <div className="mobile-menu-actions">
           <a className="primary-btn" href={WA} onClick={onClose}>
-            <MessageCircle size={18} strokeWidth={2.2} />
-            WhatsApp Now
+            <span>WhatsApp Now</span>
+            <span className="btn-icon-wrap"><MessageCircle size={16} strokeWidth={2.2} /></span>
           </a>
           <a className="secondary-btn" href={TEL} onClick={onClose}>
-            <Phone size={18} strokeWidth={2.2} />
+            <Phone size={17} strokeWidth={2.2} />
             {PHONE}
           </a>
         </div>
@@ -448,11 +445,11 @@ function FleetSection() {
   const grid = visible.slice(2);
 
   const cardVariants = {
-    hidden: { opacity: 0, y: prefersReduced ? 0 : 20 },
+    hidden: { opacity: 0, y: prefersReduced ? 0 : 24 },
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
-      transition: { duration: 0.4, delay: i * 0.06, ease: EASE_OUT_QUART as [number, number, number, number] },
+      transition: { duration: 0.45, delay: i * 0.06, ease: EASE_SPRING as [number, number, number, number] },
     }),
     exit: { opacity: 0, transition: { duration: 0.15 } },
   };
@@ -486,7 +483,7 @@ function FleetSection() {
               <div className="fleet-hero-row">
                 {hero.map(({ name, category, badge, image, perDay, perWeek, perMonth, specs, features }, i) => (
                   <motion.article
-                    className="fleet-card fleet-card-hero"
+                    className="fleet-card-hero"
                     key={name}
                     custom={i}
                     variants={cardVariants}
@@ -494,45 +491,47 @@ function FleetSection() {
                     animate="visible"
                     exit="exit"
                   >
-                    <div className="fleet-hero-img">
-                      <img src={image} alt={`${name} rental car Dubai`} loading="lazy" />
-                      <div className="fleet-hero-badges">
-                        <span className="fleet-badge">{badge}</span>
-                        <span className="fleet-cat-pill">{category}</span>
-                      </div>
-                    </div>
-                    <div className="fleet-card-body">
-                      <h3 className="fleet-name">{name}</h3>
-                      <ul className="fleet-specs" aria-label="Car specs">
-                        {specs.map(({ icon: Icon, value }) => (
-                          <li key={value}><Icon size={14} strokeWidth={2} /><span>{value}</span></li>
-                        ))}
-                      </ul>
-                      <div className="fleet-pricing-row" aria-label="Rental pricing">
-                        <div className="fleet-price-cell">
-                          <span className="fleet-price-val">{perDay}</span>
-                          <span className="fleet-price-label">per day</span>
-                        </div>
-                        <div className="fleet-price-cell">
-                          <span className="fleet-price-val">{perWeek}</span>
-                          <span className="fleet-price-label">per week</span>
-                        </div>
-                        <div className="fleet-price-cell">
-                          <span className="fleet-price-val">{perMonth}</span>
-                          <span className="fleet-price-label">per month</span>
+                    <div className="fleet-card-hero-inner">
+                      <div className="fleet-hero-img">
+                        <img src={image} alt={`${name} rental car Dubai`} loading="lazy" />
+                        <div className="fleet-hero-badges">
+                          <span className="fleet-badge">{badge}</span>
+                          <span className="fleet-cat-pill">{category}</span>
                         </div>
                       </div>
-                      <ul className="fleet-features" aria-label="Car features">
-                        {features.map((f) => (
-                          <li key={f}><CheckCircle2 size={14} strokeWidth={2.2} />{f}</li>
-                        ))}
-                      </ul>
-                      <div className="fleet-actions">
-                        <a className="fleet-cta" href={WA} aria-label={`WhatsApp about ${name}`}>
-                          <MessageCircle size={16} strokeWidth={2.2} />
-                          WhatsApp
-                        </a>
-                        <a className="fleet-cta-secondary" href={TEL} aria-label={`Call about ${name}`}>Call Now</a>
+                      <div className="fleet-card-body">
+                        <h3 className="fleet-name">{name}</h3>
+                        <ul className="fleet-specs" aria-label="Car specs">
+                          {specs.map(({ icon: Icon, value }) => (
+                            <li key={value}><Icon size={13} strokeWidth={2} /><span>{value}</span></li>
+                          ))}
+                        </ul>
+                        <div className="fleet-pricing-row" aria-label="Rental pricing">
+                          <div className="fleet-price-cell">
+                            <span className="fleet-price-val">{perDay}</span>
+                            <span className="fleet-price-label">per day</span>
+                          </div>
+                          <div className="fleet-price-cell">
+                            <span className="fleet-price-val">{perWeek}</span>
+                            <span className="fleet-price-label">per week</span>
+                          </div>
+                          <div className="fleet-price-cell">
+                            <span className="fleet-price-val">{perMonth}</span>
+                            <span className="fleet-price-label">per month</span>
+                          </div>
+                        </div>
+                        <ul className="fleet-features" aria-label="Car features">
+                          {features.map((f) => (
+                            <li key={f}><CheckCircle2 size={13} strokeWidth={2.2} />{f}</li>
+                          ))}
+                        </ul>
+                        <div className="fleet-actions">
+                          <a className="fleet-cta" href={WA} aria-label={`WhatsApp about ${name}`}>
+                            <MessageCircle size={15} strokeWidth={2.2} />
+                            WhatsApp
+                          </a>
+                          <a className="fleet-cta-secondary" href={TEL} aria-label={`Call about ${name}`}>Call Now</a>
+                        </div>
                       </div>
                     </div>
                   </motion.article>
@@ -552,27 +551,34 @@ function FleetSection() {
                     animate="visible"
                     exit="exit"
                   >
-                    <div className="fleet-img-slot">
-                      <img src={image} alt={`${name} rental car Dubai`} loading="lazy" />
-                      <span className="fleet-badge fleet-badge-overlay">{badge}</span>
-                    </div>
-                    <div className="fleet-card-body">
-                      <div className="fleet-meta">
-                        <span className="fleet-cat" data-cat={category}>{category}</span>
-                        <span className="fleet-price-inline">{perDay}<em>/day</em></span>
+                    <div className="fleet-card-inner">
+                      <div className="fleet-img-slot">
+                        <img src={image} alt={`${name} rental car Dubai`} loading="lazy" />
+                        <span className="fleet-badge fleet-badge-overlay">{badge}</span>
                       </div>
-                      <h3 className="fleet-name">{name}</h3>
-                      <ul className="fleet-specs" aria-label="Car specs">
-                        {specs.map(({ icon: Icon, value }) => (
-                          <li key={value}><Icon size={13} strokeWidth={2} /><span>{value}</span></li>
-                        ))}
-                      </ul>
-                      <div className="fleet-actions">
-                        <a className="fleet-cta" href={WA} aria-label={`WhatsApp about ${name}`}>
-                          <MessageCircle size={15} strokeWidth={2.2} />
-                          WhatsApp
-                        </a>
-                        <a className="fleet-cta-secondary" href={TEL} aria-label={`Call about ${name}`}>Call</a>
+                      <div className="fleet-card-body">
+                        <div className="fleet-meta">
+                          <span className="fleet-cat" data-cat={category}>{category}</span>
+                          <span className="fleet-price-inline">{perDay}<em>/day</em></span>
+                        </div>
+                        <h3 className="fleet-name">{name}</h3>
+                        <ul className="fleet-specs" aria-label="Car specs">
+                          {specs.map(({ icon: Icon, value }) => (
+                            <li key={value}><Icon size={12} strokeWidth={2} /><span>{value}</span></li>
+                          ))}
+                        </ul>
+                        <ul className="fleet-features" aria-label="Car features">
+                          {features.slice(0, 2).map((f) => (
+                            <li key={f}><CheckCircle2 size={12} strokeWidth={2.2} />{f}</li>
+                          ))}
+                        </ul>
+                        <div className="fleet-actions">
+                          <a className="fleet-cta" href={WA} aria-label={`WhatsApp about ${name}`}>
+                            <MessageCircle size={14} strokeWidth={2.2} />
+                            WhatsApp
+                          </a>
+                          <a className="fleet-cta-secondary" href={TEL} aria-label={`Call about ${name}`}>Call</a>
+                        </div>
                       </div>
                     </div>
                   </motion.article>
@@ -620,28 +626,28 @@ function App() {
   useStaggerReveal(".plans-grid", ".plan-card");
   useStaggerReveal(".reviews-grid", ".review-card");
   useStaggerReveal(".trust-list", ".trust-item");
-  useStaggerReveal(".faq-list", ".faq-item");
+  useStaggerReveal(".faq-list-inner", ".faq-item");
 
   /* ── Hero entrance variants ───────────────────────────────── */
   const heroCopyVariants = {
     hidden: {},
-    visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+    visible: { transition: { staggerChildren: 0.11, delayChildren: 0.08 } },
   };
   const heroLine = {
-    hidden: { opacity: 0, y: prefersReduced ? 0 : 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: EASE_OUT_EXPO } },
+    hidden: { opacity: 0, y: prefersReduced ? 0 : 36 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE_EXPO } },
   };
   const heroFade = {
-    hidden: { opacity: 0, y: prefersReduced ? 0 : 16 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE_OUT_QUART } },
+    hidden: { opacity: 0, y: prefersReduced ? 0 : 18 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE_SPRING } },
   };
   const trustListVariants = {
     hidden: {},
-    visible: { transition: { staggerChildren: 0.08, delayChildren: 0.6 } },
+    visible: { transition: { staggerChildren: 0.07, delayChildren: 0.65 } },
   };
-  const trustItem = {
-    hidden: { opacity: 0, x: prefersReduced ? 0 : -12 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: EASE_OUT_QUART } },
+  const trustItemV = {
+    hidden: { opacity: 0, x: prefersReduced ? 0 : -14 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.45, ease: EASE_SPRING } },
   };
 
   return (
@@ -650,12 +656,13 @@ function App() {
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="hero" aria-label="Royal Rides car rental">
         <div className="hero-bg" aria-hidden="true" />
+
         <motion.header
           className="nav-card"
           aria-label="Primary navigation"
-          initial={{ opacity: 0, y: prefersReduced ? 0 : -24 }}
+          initial={{ opacity: 0, y: prefersReduced ? 0 : -28 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, ease: EASE_OUT_EXPO }}
+          transition={{ duration: 0.6, ease: EASE_EXPO }}
         >
           <a className="brand" href="/">
             <span className="brand-mark" aria-hidden="true">
@@ -678,15 +685,15 @@ function App() {
 
           <div className="nav-actions">
             <a className="call-btn" href={TEL} aria-label="Call Royal Rides">
-              <Phone size={20} strokeWidth={2.5} />
+              <Phone size={17} strokeWidth={2.4} />
               <span>Call</span>
             </a>
             <a className="book-btn" href={WA} aria-label="WhatsApp Royal Rides">
-              <MessageCircle size={18} strokeWidth={2.4} />
-              WhatsApp
+              <span>WhatsApp</span>
+              <span className="btn-icon-wrap"><MessageCircle size={16} strokeWidth={2.2} /></span>
             </a>
             <button className="hamburger-btn" onClick={() => setMenuOpen(true)} aria-label="Open navigation menu" aria-expanded={menuOpen}>
-              <Menu size={22} strokeWidth={2.2} />
+              <Menu size={20} strokeWidth={2} />
             </button>
           </div>
         </motion.header>
@@ -699,7 +706,7 @@ function App() {
           initial="hidden"
           animate="visible"
         >
-          <motion.span className="hero-eyebrow" variants={heroLine}>Car rental in Dubai</motion.span>
+          <motion.span className="hero-eyebrow eyebrow" variants={heroLine}>Car rental in Dubai</motion.span>
           <h1>
             <motion.span variants={heroLine}>Affordable</motion.span>
             <motion.span className="accent" variants={heroLine}>Car Rental</motion.span>
@@ -709,19 +716,19 @@ function App() {
             Budget cars, sedans, and SUVs with doorstep delivery, airport transfers, and flexible daily, weekly, and monthly plans.
           </motion.p>
           <motion.div className="hero-actions" variants={heroFade}>
-            <a className="book-btn hero-wa-btn" href={WA} aria-label="WhatsApp Royal Rides now">
-              <MessageCircle size={20} strokeWidth={2.3} />
-              WhatsApp Now
+            <a className="primary-btn hero-wa-btn" href={WA} aria-label="WhatsApp Royal Rides now">
+              <span>WhatsApp Now</span>
+              <span className="btn-icon-wrap"><MessageCircle size={18} strokeWidth={2.2} /></span>
             </a>
             <a className="secondary-btn hero-browse-btn" href="#fleet">
               Browse Cars
-              <ArrowRight size={17} strokeWidth={2.3} />
+              <ArrowRight size={16} strokeWidth={2.2} />
             </a>
           </motion.div>
           <motion.ul className="hero-trust" aria-label="Trust points" variants={trustListVariants}>
             {["Daily, weekly & monthly rentals", "Doorstep delivery across Dubai", "Airport transfers available", "Transparent pricing"].map((t) => (
-              <motion.li key={t} variants={trustItem}>
-                <CheckCircle2 size={15} strokeWidth={2.3} aria-hidden="true" />
+              <motion.li key={t} variants={trustItemV}>
+                <CheckCircle2 size={14} strokeWidth={2.4} aria-hidden="true" />
                 {t}
               </motion.li>
             ))}
@@ -729,9 +736,9 @@ function App() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: prefersReduced ? 0 : 40 }}
+          initial={{ opacity: 0, y: prefersReduced ? 0 : 44 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, delay: 0.55, ease: EASE_OUT_EXPO }}
+          transition={{ duration: 0.7, delay: 0.55, ease: EASE_EXPO }}
         >
           <BookingForm />
         </motion.div>
@@ -743,7 +750,11 @@ function App() {
           <ul className="trust-list" role="list">
             {trustItems.map(({ icon: Icon, label, sub, color }) => (
               <li className="trust-item" key={label}>
-                <span className={`trust-icon trust-icon--${color}`} aria-hidden="true"><Icon size={22} strokeWidth={2.2} /></span>
+                <span className="trust-icon-shell" aria-hidden="true">
+                  <span className={`trust-icon trust-icon--${color}`}>
+                    <Icon size={20} strokeWidth={2} />
+                  </span>
+                </span>
                 <span className="trust-text">
                   <strong>{label}</strong>
                   <span>{sub}</span>
@@ -765,38 +776,42 @@ function App() {
           <div className="cat-grid">
             {/* Featured large card */}
             <article className="cat-card cat-card-featured" key={categories[0].slug}>
-              <div className="cat-img-wrap">
-                <img src={categories[0].image} alt={`${categories[0].title} rental in Dubai`} loading="lazy" />
-              </div>
-              <div className="cat-body">
-                <h3 className="cat-title">{categories[0].title}</h3>
-                <p className="cat-desc">{categories[0].desc}</p>
-                <ul className="cat-tags" aria-label="Category highlights">
-                  {categories[0].tags.map((t) => <li key={t}>{t}</li>)}
-                </ul>
-                <a className="cat-cta" href={WA} aria-label={`View ${categories[0].title}`}>
-                  {categories[0].cta}
-                  <ArrowRight size={14} strokeWidth={2.3} />
-                </a>
+              <div className="cat-card-inner">
+                <div className="cat-img-wrap">
+                  <img src={categories[0].image} alt={`${categories[0].title} rental in Dubai`} loading="lazy" />
+                </div>
+                <div className="cat-body">
+                  <h3 className="cat-title">{categories[0].title}</h3>
+                  <p className="cat-desc">{categories[0].desc}</p>
+                  <ul className="cat-tags" aria-label="Category highlights">
+                    {categories[0].tags.map((t) => <li key={t}>{t}</li>)}
+                  </ul>
+                  <a className="cat-cta" href={WA} aria-label={`View ${categories[0].title}`}>
+                    {categories[0].cta}
+                    <span className="btn-icon-wrap"><ArrowRight size={13} strokeWidth={2.3} /></span>
+                  </a>
+                </div>
               </div>
             </article>
             {/* Stacked smaller cards */}
             <div className="cat-stack">
               {categories.slice(1).map(({ slug, title, desc, image, tags, cta }) => (
                 <article className="cat-card cat-card-compact" key={slug}>
-                  <div className="cat-img-wrap">
-                    <img src={image} alt={`${title} rental in Dubai`} loading="lazy" />
-                  </div>
-                  <div className="cat-body">
-                    <h3 className="cat-title">{title}</h3>
-                    <p className="cat-desc">{desc}</p>
-                    <ul className="cat-tags" aria-label="Category highlights">
-                      {tags.map((t) => <li key={t}>{t}</li>)}
-                    </ul>
-                    <a className="cat-cta" href={WA} aria-label={`View ${title}`}>
-                      {cta}
-                      <ArrowRight size={14} strokeWidth={2.3} />
-                    </a>
+                  <div className="cat-card-inner">
+                    <div className="cat-img-wrap">
+                      <img src={image} alt={`${title} rental in Dubai`} loading="lazy" />
+                    </div>
+                    <div className="cat-body">
+                      <h3 className="cat-title">{title}</h3>
+                      <p className="cat-desc">{desc}</p>
+                      <ul className="cat-tags" aria-label="Category highlights">
+                        {tags.map((t) => <li key={t}>{t}</li>)}
+                      </ul>
+                      <a className="cat-cta" href={WA} aria-label={`View ${title}`}>
+                        {cta}
+                        <span className="btn-icon-wrap"><ArrowRight size={13} strokeWidth={2.3} /></span>
+                      </a>
+                    </div>
                   </div>
                 </article>
               ))}
@@ -812,6 +827,7 @@ function App() {
       <section className="section delivery-section" id="delivery" aria-label="Doorstep delivery and airport transfers">
         <div className="section-inner delivery-inner">
           <div className="delivery-copy reveal-section">
+            <span className="eyebrow">Delivery &amp; Transfers</span>
             <h2 className="section-title">Car Rental Made Simple Across Dubai</h2>
             <p className="delivery-body">
               Need the car at your hotel, home, office, or airport? Message Royal Rides to check delivery and pickup options for your booking.
@@ -824,31 +840,37 @@ function App() {
                 { icon: MessageCircle, text: "Confirm everything directly via WhatsApp" },
               ].map(({ icon: Icon, text }) => (
                 <li key={text}>
-                  <span className="delivery-icon" aria-hidden="true"><Icon size={18} strokeWidth={2} /></span>
+                  <span className="delivery-icon" aria-hidden="true"><Icon size={17} strokeWidth={2} /></span>
                   <span>{text}</span>
                 </li>
               ))}
             </ul>
             <a className="primary-btn" href={WA} aria-label="Ask about delivery on WhatsApp">
-              <MessageCircle size={20} strokeWidth={2.2} />
-              Ask on WhatsApp
+              <span>Ask on WhatsApp</span>
+              <span className="btn-icon-wrap"><MessageCircle size={17} strokeWidth={2.2} /></span>
             </a>
           </div>
           <div className="delivery-cards">
             <div className="delivery-card delivery-card-accent">
-              <div className="dc-icon"><Truck size={28} strokeWidth={1.9} /></div>
-              <strong>Doorstep Delivery</strong>
-              <span>Request car delivery to your Dubai location, subject to availability.</span>
+              <div className="delivery-card-inner">
+                <div className="dc-icon"><Truck size={26} strokeWidth={1.8} /></div>
+                <strong>Doorstep Delivery</strong>
+                <span>Request car delivery to your Dubai location, subject to availability.</span>
+              </div>
             </div>
             <div className="delivery-card">
-              <div className="dc-icon"><Plane size={28} strokeWidth={1.9} /></div>
-              <strong>Airport Transfer Support</strong>
-              <span>Arrange airport pickup or drop off for a smoother arrival.</span>
+              <div className="delivery-card-inner">
+                <div className="dc-icon"><Plane size={26} strokeWidth={1.8} /></div>
+                <strong>Airport Transfer Support</strong>
+                <span>Arrange airport pickup or drop off for a smoother arrival.</span>
+              </div>
             </div>
             <div className="delivery-card delivery-card-hours">
-              <div className="dc-icon"><Clock size={28} strokeWidth={1.9} /></div>
-              <strong>Available Mon–Sun</strong>
-              <span>Team available 09:00–22:00. Most bookings confirmed within 10 minutes on WhatsApp.</span>
+              <div className="delivery-card-inner">
+                <div className="dc-icon"><Clock size={26} strokeWidth={1.8} /></div>
+                <strong>Available Mon–Sun</strong>
+                <span>Team available 09:00–22:00. Most bookings confirmed within 10 minutes on WhatsApp.</span>
+              </div>
             </div>
           </div>
         </div>
@@ -858,6 +880,7 @@ function App() {
       <section className="section process-section" aria-label="How to rent a car from Royal Rides">
         <div className="section-inner">
           <div className="section-header centered reveal-section">
+            <span className="eyebrow">Simple booking</span>
             <h2 className="section-title">Four Steps to Your Rental</h2>
             <p className="section-sub">Choose your car, share your details, confirm availability, and get ready to drive.</p>
           </div>
@@ -865,7 +888,7 @@ function App() {
             {steps.map(({ num, title, desc }) => (
               <li className="process-step" key={num}>
                 <span className="step-num" aria-hidden="true">{num}</span>
-                <div className="step-body">
+                <div>
                   <h3 className="step-title">{title}</h3>
                   <p className="step-desc">{desc}</p>
                 </div>
@@ -879,6 +902,7 @@ function App() {
       <section className="section plans-section" id="plans" aria-label="Rental plans">
         <div className="section-inner">
           <div className="section-header centered reveal-section">
+            <span className="eyebrow">Flexible plans</span>
             <h2 className="section-title">Daily, Weekly, and Monthly Rentals</h2>
             <p className="section-sub">Pick a rental duration that fits your stay, routine, or business travel needs in Dubai.</p>
           </div>
@@ -886,17 +910,19 @@ function App() {
             {plans.map(({ period, best, perks, highlight }) => (
               <article className={`plan-card${highlight ? " plan-highlight" : ""}`} key={period}>
                 {highlight && <span className="plan-popular-badge">Most Popular</span>}
-                <h3 className="plan-period">{period} Rental</h3>
-                <p className="plan-best">Best for: {best}</p>
-                <ul className="plan-perks" role="list">
-                  {perks.map((p) => (
-                    <li key={p}><CheckCircle2 size={16} strokeWidth={2.2} />{p}</li>
-                  ))}
-                </ul>
-                <a className={`plan-cta${highlight ? " plan-cta-primary" : ""}`} href={WA} aria-label={`WhatsApp about ${period} rental`}>
-                  <MessageCircle size={17} strokeWidth={2.2} />
-                  WhatsApp Now
-                </a>
+                <div className="plan-card-inner">
+                  <h3 className="plan-period">{period} Rental</h3>
+                  <p className="plan-best">Best for: {best}</p>
+                  <ul className="plan-perks" role="list">
+                    {perks.map((p) => (
+                      <li key={p}><CheckCircle2 size={15} strokeWidth={2.2} />{p}</li>
+                    ))}
+                  </ul>
+                  <a className={`plan-cta${highlight ? " plan-cta-primary" : ""}`} href={WA} aria-label={`WhatsApp about ${period} rental`}>
+                    <MessageCircle size={16} strokeWidth={2.2} />
+                    WhatsApp Now
+                  </a>
+                </div>
               </article>
             ))}
           </div>
@@ -907,31 +933,36 @@ function App() {
       <section className="section reviews-section" aria-label="Customer reviews">
         <div className="section-inner">
           <div className="section-header reveal-section">
+            <span className="eyebrow">Customer feedback</span>
             <h2 className="section-title">Feedback from Royal Rides Customers</h2>
             <p className="section-sub">Shared by customers who have rented with Royal Rides Car Rental Dubai.</p>
           </div>
           <div className="reviews-layout">
             <div className="reviews-stat-block reveal-section">
-              <div className="reviews-big-rating">5.0</div>
-              <div className="reviews-stars-row" aria-label="5 out of 5 stars">
-                {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={22} strokeWidth={0} fill="currentColor" aria-hidden="true" />)}
+              <div className="reviews-stat-inner">
+                <div className="reviews-big-rating">5.0</div>
+                <div className="reviews-stars-row" aria-label="5 out of 5 stars">
+                  {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={20} strokeWidth={0} fill="currentColor" aria-hidden="true" />)}
+                </div>
+                <p className="reviews-stat-label">Customer rating</p>
+                <a className="primary-btn reviews-cta" href={WA}>
+                  <span>Book Now</span>
+                  <span className="btn-icon-wrap"><MessageCircle size={15} strokeWidth={2.2} /></span>
+                </a>
               </div>
-              <p className="reviews-stat-label">Customer rating</p>
-              <a className="primary-btn reviews-cta" href={WA}>
-                <MessageCircle size={18} strokeWidth={2.2} />
-                Book Now
-              </a>
             </div>
             <div className="reviews-grid">
               {reviews.map(({ name, context, text }) => (
                 <article className="review-card" key={name}>
-                  <div className="review-stars" aria-label="5 stars">
-                    {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={15} strokeWidth={0} fill="currentColor" aria-hidden="true" />)}
-                  </div>
-                  <p className="review-text">&#8220;{text}&#8221;</p>
-                  <div className="review-author">
-                    <strong>{name}</strong>
-                    <span>{context}</span>
+                  <div className="review-card-inner">
+                    <div className="review-stars" aria-label="5 stars">
+                      {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={14} strokeWidth={0} fill="currentColor" aria-hidden="true" />)}
+                    </div>
+                    <p className="review-text">&#8220;{text}&#8221;</p>
+                    <div className="review-author">
+                      <strong>{name}</strong>
+                      <span>{context}</span>
+                    </div>
                   </div>
                 </article>
               ))}
@@ -944,11 +975,14 @@ function App() {
       <section className="section faq-section" aria-label="Frequently asked questions">
         <div className="section-inner faq-inner">
           <div className="section-header faq-header reveal-section">
+            <span className="eyebrow">Got questions?</span>
             <h2 className="section-title">Frequently Asked Questions</h2>
             <p className="section-sub">Quick answers before you book your rental car in Dubai.</p>
           </div>
-          <div className="faq-list" role="list">
-            {faqs.map(({ q, a }) => <FaqItem key={q} q={q} a={a} />)}
+          <div className="faq-list">
+            <div className="faq-list-inner">
+              {faqs.map(({ q, a }) => <FaqItem key={q} q={q} a={a} />)}
+            </div>
           </div>
         </div>
       </section>
@@ -963,38 +997,44 @@ function App() {
               <p className="final-cta-sub">Send your dates, pickup location, and preferred car type on WhatsApp. Most bookings are confirmed within 10 minutes.</p>
               <div className="final-cta-contact-row">
                 <a href={TEL} className="final-cta-contact-item">
-                  <Phone size={17} strokeWidth={2.3} />
+                  <Phone size={16} strokeWidth={2.3} />
                   {PHONE}
                 </a>
                 <span className="final-cta-contact-sep" aria-hidden="true">·</span>
                 <span className="final-cta-contact-item">
-                  <Clock size={17} strokeWidth={2.3} />
+                  <Clock size={16} strokeWidth={2.3} />
                   Mon–Sun 09:00–22:00
                 </span>
               </div>
               <div className="final-cta-actions">
                 <a className="primary-btn final-wa-btn" href={WA} aria-label="WhatsApp Royal Rides">
-                  <MessageCircle size={20} strokeWidth={2.2} />
-                  WhatsApp Now
+                  <span>WhatsApp Now</span>
+                  <span className="btn-icon-wrap"><MessageCircle size={17} strokeWidth={2.2} /></span>
                 </a>
                 <a className="secondary-btn" href={TEL} aria-label="Call Royal Rides">
-                  <Phone size={18} strokeWidth={2.2} />
+                  <Phone size={17} strokeWidth={2.2} />
                   Call Now
                 </a>
               </div>
             </div>
             <div className="final-cta-aside" aria-hidden="true">
               <div className="final-cta-badge">
-                <span className="final-badge-num">10 min</span>
-                <span className="final-badge-label">avg. response time</span>
+                <div className="final-cta-badge-inner">
+                  <span className="final-badge-num">10 min</span>
+                  <span className="final-badge-label">avg. response time</span>
+                </div>
               </div>
               <div className="final-cta-badge">
-                <span className="final-badge-num">24/7</span>
-                <span className="final-badge-label">WhatsApp support</span>
+                <div className="final-cta-badge-inner">
+                  <span className="final-badge-num">24/7</span>
+                  <span className="final-badge-label">WhatsApp support</span>
+                </div>
               </div>
               <div className="final-cta-badge">
-                <span className="final-badge-num">3</span>
-                <span className="final-badge-label">car categories</span>
+                <div className="final-cta-badge-inner">
+                  <span className="final-badge-num">3</span>
+                  <span className="final-badge-label">car categories</span>
+                </div>
               </div>
             </div>
           </div>
@@ -1017,11 +1057,11 @@ function App() {
             </a>
             <p className="footer-tagline">Affordable car rental in Dubai with budget cars, sedans, SUVs, and flexible daily, weekly, and monthly rental options.</p>
             <a className="footer-wa" href={WA} aria-label="WhatsApp Royal Rides">
-              <MessageCircle size={17} strokeWidth={2.2} />
+              <MessageCircle size={16} strokeWidth={2.2} />
               WhatsApp Now
             </a>
             <a className="footer-phone" href={TEL} aria-label="Call Royal Rides">
-              <Phone size={16} strokeWidth={2.2} />
+              <Phone size={15} strokeWidth={2.2} />
               {PHONE}
             </a>
             <a className="footer-email" href="mailto:royalridescarrental@gmail.com" aria-label="Email Royal Rides">
