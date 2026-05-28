@@ -1,4 +1,4 @@
-import { StrictMode, useState, useEffect } from "react";
+import React, { StrictMode, useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Building2,
@@ -400,6 +400,62 @@ function BookingForm() {
   );
 }
 
+/* ── Fleet Marquee ──────────────────────────────────────────── */
+function CarCard({ name, category, badge, image, perDay, perWeek, perMonth, specs }: typeof featuredCars[0]) {
+  return (
+    <article className="fmc">
+      <div className="fmc-img-shell">
+        <img src={image} alt={`${name} rental Dubai`} loading="lazy" />
+        <span className="fmc-badge">{badge}</span>
+      </div>
+      <div className="fmc-body">
+        <div className="fmc-meta">
+          <span className="fmc-cat" data-cat={category}>{category}</span>
+          <span className="fmc-day">{perDay}<em>/day</em></span>
+        </div>
+        <h3 className="fmc-name">{name}</h3>
+        <ul className="fmc-specs">
+          {specs.map(({ icon: Icon, value }) => (
+            <li key={value}><Icon size={11} strokeWidth={2} />{value}</li>
+          ))}
+        </ul>
+        <div className="fmc-pricing">
+          <span>{perWeek}<em>/ week</em></span>
+          <span>{perMonth}<em>/ month</em></span>
+        </div>
+        <a className="fmc-cta" href={WA} aria-label={`WhatsApp about ${name}`}>
+          <MessageCircle size={14} strokeWidth={2.2} />
+          WhatsApp
+        </a>
+      </div>
+    </article>
+  );
+}
+
+function FleetMarquee() {
+  const wrapRef = React.useRef<HTMLDivElement>(null);
+  const prefersReduced = useReducedMotion();
+
+  return (
+    <div
+      className="fleet-marquee-wrap"
+      ref={wrapRef}
+      aria-label="Featured rental cars"
+      onMouseEnter={() => { if (wrapRef.current) wrapRef.current.style.setProperty("--mq-play", "paused"); }}
+      onMouseLeave={() => { if (wrapRef.current) wrapRef.current.style.setProperty("--mq-play", prefersReduced ? "paused" : "running"); }}
+    >
+      <div className="fleet-marquee-inner" style={{ "--mq-dur": prefersReduced ? "0s" : "48s" } as React.CSSProperties}>
+        {/* Two identical tracks for seamless loop */}
+        {[0, 1].map((n) => (
+          <div className="fleet-marquee-track" key={n} aria-hidden={n === 1 ? "true" : undefined}>
+            {featuredCars.map((car) => <CarCard key={car.name + n} {...car} />)}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   useEffect(() => {
     if (open) document.body.style.overflow = "hidden";
@@ -438,167 +494,22 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
 }
 
 function FleetSection() {
-  const [activeTab, setActiveTab] = useState<Tab>("All");
-  const prefersReduced = useReducedMotion();
-  const visible = activeTab === "All" ? featuredCars : featuredCars.filter((c) => c.category === activeTab);
-  const hero = visible.slice(0, 2);
-  const grid = visible.slice(2);
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: prefersReduced ? 0 : 24 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.45, delay: i * 0.06, ease: EASE_SPRING as [number, number, number, number] },
-    }),
-    exit: { opacity: 0, transition: { duration: 0.15 } },
-  };
-
   return (
     <section className="section fleet-section" id="fleet" aria-label="Featured rental cars">
       <div className="section-inner">
         <div className="fleet-header-row reveal-section">
           <div className="section-header">
+            <span className="eyebrow">Browse the fleet</span>
             <h2 className="section-title">Find Your Best Car Here</h2>
             <p className="section-sub">Browse popular cars for daily, weekly, and monthly rental in Dubai.</p>
           </div>
-          <div className="fleet-tabs" role="tablist" aria-label="Filter by car type">
-            {TABS.map((t) => (
-              <button
-                key={t}
-                role="tab"
-                aria-selected={activeTab === t}
-                className={`fleet-tab${activeTab === t ? " fleet-tab-active" : ""}`}
-                onClick={() => setActiveTab(t)}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
+          <a className="primary-btn" href={WA} aria-label="Ask about any car on WhatsApp">
+            <span>Ask on WhatsApp</span>
+            <span className="btn-icon-wrap"><MessageCircle size={16} strokeWidth={2.2} /></span>
+          </a>
         </div>
-
-        <AnimatePresence mode="wait">
-          <motion.div key={activeTab}>
-            {hero.length > 0 && (
-              <div className="fleet-hero-row">
-                {hero.map(({ name, category, badge, image, perDay, perWeek, perMonth, specs, features }, i) => (
-                  <motion.article
-                    className="fleet-card-hero"
-                    key={name}
-                    custom={i}
-                    variants={cardVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                  >
-                    <div className="fleet-card-hero-inner">
-                      <div className="fleet-hero-img">
-                        <img src={image} alt={`${name} rental car Dubai`} loading="lazy" />
-                        <div className="fleet-hero-badges">
-                          <span className="fleet-badge">{badge}</span>
-                          <span className="fleet-cat-pill">{category}</span>
-                        </div>
-                      </div>
-                      <div className="fleet-card-body">
-                        <h3 className="fleet-name">{name}</h3>
-                        <ul className="fleet-specs" aria-label="Car specs">
-                          {specs.map(({ icon: Icon, value }) => (
-                            <li key={value}><Icon size={13} strokeWidth={2} /><span>{value}</span></li>
-                          ))}
-                        </ul>
-                        <div className="fleet-pricing-row" aria-label="Rental pricing">
-                          <div className="fleet-price-cell">
-                            <span className="fleet-price-val">{perDay}</span>
-                            <span className="fleet-price-label">per day</span>
-                          </div>
-                          <div className="fleet-price-cell">
-                            <span className="fleet-price-val">{perWeek}</span>
-                            <span className="fleet-price-label">per week</span>
-                          </div>
-                          <div className="fleet-price-cell">
-                            <span className="fleet-price-val">{perMonth}</span>
-                            <span className="fleet-price-label">per month</span>
-                          </div>
-                        </div>
-                        <ul className="fleet-features" aria-label="Car features">
-                          {features.map((f) => (
-                            <li key={f}><CheckCircle2 size={13} strokeWidth={2.2} />{f}</li>
-                          ))}
-                        </ul>
-                        <div className="fleet-actions">
-                          <a className="fleet-cta" href={WA} aria-label={`WhatsApp about ${name}`}>
-                            <MessageCircle size={15} strokeWidth={2.2} />
-                            WhatsApp
-                          </a>
-                          <a className="fleet-cta-secondary" href={TEL} aria-label={`Call about ${name}`}>Call Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.article>
-                ))}
-              </div>
-            )}
-
-            {grid.length > 0 && (
-              <div className="fleet-grid">
-                {grid.map(({ name, category, badge, image, perDay, specs, features }, i) => (
-                  <motion.article
-                    className="fleet-card"
-                    key={name}
-                    custom={i}
-                    variants={cardVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                  >
-                    <div className="fleet-card-inner">
-                      <div className="fleet-img-slot">
-                        <img src={image} alt={`${name} rental car Dubai`} loading="lazy" />
-                        <span className="fleet-badge fleet-badge-overlay">{badge}</span>
-                      </div>
-                      <div className="fleet-card-body">
-                        <div className="fleet-meta">
-                          <span className="fleet-cat" data-cat={category}>{category}</span>
-                          <span className="fleet-price-inline">{perDay}<em>/day</em></span>
-                        </div>
-                        <h3 className="fleet-name">{name}</h3>
-                        <ul className="fleet-specs" aria-label="Car specs">
-                          {specs.map(({ icon: Icon, value }) => (
-                            <li key={value}><Icon size={12} strokeWidth={2} /><span>{value}</span></li>
-                          ))}
-                        </ul>
-                        <ul className="fleet-features" aria-label="Car features">
-                          {features.slice(0, 2).map((f) => (
-                            <li key={f}><CheckCircle2 size={12} strokeWidth={2.2} />{f}</li>
-                          ))}
-                        </ul>
-                        <div className="fleet-actions">
-                          <a className="fleet-cta" href={WA} aria-label={`WhatsApp about ${name}`}>
-                            <MessageCircle size={14} strokeWidth={2.2} />
-                            WhatsApp
-                          </a>
-                          <a className="fleet-cta-secondary" href={TEL} aria-label={`Call about ${name}`}>Call</a>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.article>
-                ))}
-              </div>
-            )}
-
-            {visible.length === 0 && (
-              <motion.p
-                className="fleet-empty"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                No cars in this category yet. <a href={WA}>Ask on WhatsApp.</a>
-              </motion.p>
-            )}
-          </motion.div>
-        </AnimatePresence>
       </div>
+      <FleetMarquee />
     </section>
   );
 }
@@ -620,7 +531,7 @@ function App() {
 
   /* ── GSAP scroll reveals ──────────────────────────────────── */
   useScrollReveal(".reveal-section");
-  useStaggerReveal(".cat-grid", ".cat-card");
+  useStaggerReveal(".cat-row", ".cat-tile");
   useStaggerReveal(".delivery-cards", ".delivery-card");
   useStaggerReveal(".process-list", ".process-step");
   useStaggerReveal(".plans-grid", ".plan-card");
@@ -700,48 +611,48 @@ function App() {
 
         <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
 
-        <motion.div
-          className="hero-copy"
-          variants={heroCopyVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.span className="hero-eyebrow eyebrow" variants={heroLine}>Car rental in Dubai</motion.span>
-          <h1>
-            <motion.span variants={heroLine}>Affordable</motion.span>
-            <motion.span className="accent" variants={heroLine}>Car Rental</motion.span>
-            <motion.span variants={heroLine}>in Dubai</motion.span>
-          </h1>
-          <motion.p variants={heroFade}>
-            Budget cars, sedans, and SUVs with doorstep delivery, airport transfers, and flexible daily, weekly, and monthly plans.
-          </motion.p>
-          <motion.div className="hero-actions" variants={heroFade}>
-            <a className="primary-btn hero-wa-btn" href={WA} aria-label="WhatsApp Royal Rides now">
-              <span>WhatsApp Now</span>
-              <span className="btn-icon-wrap"><MessageCircle size={18} strokeWidth={2.2} /></span>
-            </a>
-            <a className="secondary-btn hero-browse-btn" href="#fleet">
-              Browse Cars
-              <ArrowRight size={16} strokeWidth={2.2} />
-            </a>
-          </motion.div>
-          <motion.ul className="hero-trust" aria-label="Trust points" variants={trustListVariants}>
-            {["Daily, weekly & monthly rentals", "Doorstep delivery across Dubai", "Airport transfers available", "Transparent pricing"].map((t) => (
-              <motion.li key={t} variants={trustItemV}>
-                <CheckCircle2 size={14} strokeWidth={2.4} aria-hidden="true" />
-                {t}
-              </motion.li>
-            ))}
-          </motion.ul>
-        </motion.div>
+        {/* Hero car image — right side */}
+        <div className="hero-car-img" aria-hidden="true">
+          <img src="/assets/hero-car.png" alt="" />
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: prefersReduced ? 0 : 44 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.55, ease: EASE_EXPO }}
-        >
-          <BookingForm />
-        </motion.div>
+        <div className="hero-content-wrap">
+          <motion.div
+            className="hero-copy"
+            variants={heroCopyVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.span className="hero-eyebrow eyebrow" variants={heroLine}>Car rental in Dubai</motion.span>
+            <h1>
+              <motion.span variants={heroLine}>Affordable</motion.span>
+              <motion.span className="accent" variants={heroLine}>Car Rental</motion.span>
+              <motion.span variants={heroLine}>in Dubai</motion.span>
+            </h1>
+            <motion.p variants={heroFade}>
+              Budget cars, sedans, and SUVs with doorstep delivery, airport transfers, and flexible daily, weekly, and monthly plans.
+            </motion.p>
+            <motion.div className="hero-actions" variants={heroFade}>
+              <a className="primary-btn hero-wa-btn" href={WA} aria-label="WhatsApp Royal Rides now">
+                <span>WhatsApp Now</span>
+                <span className="btn-icon-wrap"><MessageCircle size={18} strokeWidth={2.2} /></span>
+              </a>
+              <a className="secondary-btn hero-browse-btn" href="#fleet">
+                Browse Cars
+                <ArrowRight size={16} strokeWidth={2.2} />
+              </a>
+            </motion.div>
+          </motion.div>
+
+          {/* Booking form — embedded inside hero */}
+          <motion.div
+            initial={{ opacity: 0, y: prefersReduced ? 0 : 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.5, ease: EASE_EXPO }}
+          >
+            <BookingForm />
+          </motion.div>
+        </div>
       </section>
 
       {/* ── TRUST BAR ────────────────────────────────────────────── */}
@@ -768,54 +679,32 @@ function App() {
       {/* ── CAR CATEGORIES ───────────────────────────────────────── */}
       <section className="section categories-section" aria-label="Car categories">
         <div className="section-inner">
-          <div className="section-header reveal-section">
+          <div className="section-header centered reveal-section">
             <span className="eyebrow">Choose your car type</span>
             <h2 className="section-title">What Type of Car Are You Looking For?</h2>
             <p className="section-sub">Pick a category and check cars that fit your trip, budget, and rental duration.</p>
           </div>
-          <div className="cat-grid">
-            {/* Featured large card */}
-            <article className="cat-card cat-card-featured" key={categories[0].slug}>
-              <div className="cat-card-inner">
-                <div className="cat-img-wrap">
-                  <img src={categories[0].image} alt={`${categories[0].title} rental in Dubai`} loading="lazy" />
-                </div>
-                <div className="cat-body">
-                  <h3 className="cat-title">{categories[0].title}</h3>
-                  <p className="cat-desc">{categories[0].desc}</p>
-                  <ul className="cat-tags" aria-label="Category highlights">
-                    {categories[0].tags.map((t) => <li key={t}>{t}</li>)}
-                  </ul>
-                  <a className="cat-cta" href={WA} aria-label={`View ${categories[0].title}`}>
-                    {categories[0].cta}
-                    <span className="btn-icon-wrap"><ArrowRight size={13} strokeWidth={2.3} /></span>
-                  </a>
-                </div>
-              </div>
-            </article>
-            {/* Stacked smaller cards */}
-            <div className="cat-stack">
-              {categories.slice(1).map(({ slug, title, desc, image, tags, cta }) => (
-                <article className="cat-card cat-card-compact" key={slug}>
-                  <div className="cat-card-inner">
-                    <div className="cat-img-wrap">
-                      <img src={image} alt={`${title} rental in Dubai`} loading="lazy" />
-                    </div>
-                    <div className="cat-body">
-                      <h3 className="cat-title">{title}</h3>
-                      <p className="cat-desc">{desc}</p>
-                      <ul className="cat-tags" aria-label="Category highlights">
-                        {tags.map((t) => <li key={t}>{t}</li>)}
-                      </ul>
-                      <a className="cat-cta" href={WA} aria-label={`View ${title}`}>
-                        {cta}
-                        <span className="btn-icon-wrap"><ArrowRight size={13} strokeWidth={2.3} /></span>
-                      </a>
-                    </div>
+          <div className="cat-row">
+            {categories.map(({ slug, title, desc, image, tags, cta }) => (
+              <article className="cat-tile" key={slug}>
+                <div className="cat-tile-inner">
+                  <div className="cat-tile-img">
+                    <img src={image} alt={`${title} rental Dubai`} loading="lazy" />
                   </div>
-                </article>
-              ))}
-            </div>
+                  <div className="cat-tile-body">
+                    <h3 className="cat-title">{title}</h3>
+                    <p className="cat-desc">{desc}</p>
+                    <ul className="cat-tags" aria-label="Category highlights">
+                      {tags.map((t) => <li key={t}>{t}</li>)}
+                    </ul>
+                    <a className="cat-cta" href={WA} aria-label={`View ${title}`}>
+                      {cta}
+                      <span className="btn-icon-wrap"><ArrowRight size={13} strokeWidth={2.3} /></span>
+                    </a>
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>
