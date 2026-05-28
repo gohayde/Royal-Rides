@@ -45,6 +45,7 @@ const categories = [
     title: "Sedan Cars",
     desc: "Comfortable cars for daily drives, business trips, and city travel in Dubai.",
     icon: Car,
+    image: "/assets/categories/Sedan.png",
     tags: ["City drives", "Business travel", "Daily rentals"],
     cta: "View Sedans",
   },
@@ -53,6 +54,7 @@ const categories = [
     title: "SUV Cars",
     desc: "Spacious options for families, airport runs, and longer drives around Dubai.",
     icon: Users,
+    image: "/assets/categories/SUV.png",
     tags: ["Family trips", "Airport pickup", "Group travel"],
     cta: "View SUVs",
   },
@@ -61,6 +63,7 @@ const categories = [
     title: "Budget Cars",
     desc: "Affordable rental cars for simple, reliable daily transport in Dubai.",
     icon: Banknote,
+    image: "/assets/categories/Budget.png",
     tags: ["Low cost", "Weekly plans", "Monthly rentals"],
     cta: "View Budget Cars",
   },
@@ -68,9 +71,10 @@ const categories = [
 
 const featuredCars = [
   {
-    name: "KIA Picanto 2024",
-    category: "Budget Car",
-    badge: "Best value",
+    name: "Hyundai Accent 2025",
+    category: "Sedan Car",
+    badge: "Popular choice",
+    image: "https://ik.imagekit.io/mpgev0ilfv/Hyundai_Accent_2023_21405_21405_1806002100-1_small.jpg_v=2.7?updatedAt=1737124510134",
     perDay: "AED 120",
     perWeek: "AED 700",
     perMonth: "AED 1,900",
@@ -82,9 +86,10 @@ const featuredCars = [
     features: ["Insurance included", "Free delivery", "Min. documents", "AC"],
   },
   {
-    name: "Hyundai Accent 2025",
+    name: "Hyundai Elantra 2024",
     category: "Sedan Car",
     badge: "Popular choice",
+    image: "https://ik.imagekit.io/mpgev0ilfv/Hyundai-Elantra-2024_33270_27680256424-1_small.jpg_v=2.7?updatedAt=1737123253557",
     perDay: "AED 150",
     perWeek: "AED 910",
     perMonth: "AED 2,500",
@@ -99,6 +104,7 @@ const featuredCars = [
     name: "Mazda 3 2024",
     category: "Sedan Car",
     badge: "City favourite",
+    image: "https://ik.imagekit.io/mpgev0ilfv/Mazda_3-Sedan_2024_29444_29444_2320958168-1_small.jpg_v=2.7?updatedAt=1737124512734",
     perDay: "AED 170",
     perWeek: "AED 1,050",
     perMonth: "AED 2,700",
@@ -113,20 +119,37 @@ const featuredCars = [
     name: "Nissan Sunny 2023",
     category: "Budget Sedan",
     badge: "Affordable pick",
-    perDay: "AED 130",
-    perWeek: "AED 700",
-    perMonth: "AED 1,850",
+    image: "https://ik.imagekit.io/mpgev0ilfv/Nissan_Sunny_2023_21215_21215_17950356406-1_small.jpg_v=2.7?updatedAt=1737124507529",
+    perDay: "AED 200",
+    perWeek: "AED 1,200",
+    perMonth: "AED 3,200",
     specs: [
       { icon: Users, value: "5 seats" },
       { icon: Fuel, value: "Petrol" },
       { icon: Settings2, value: "Automatic" },
     ],
-    features: ["Insurance included", "Free delivery", "Min. documents", "Economical"],
+    features: ["Insurance included", "Free delivery", "Min. documents", "Comfort ride"],
+  },
+  {
+    name: "KIA K5 2024",
+    category: "Sedan Car",
+    badge: "Business ready",
+    image: "https://ik.imagekit.io/mpgev0ilfv/Kia_K5_2024_30340_30340_24268528171-1_small.jpg_v=2.7?updatedAt=1737124063429",
+    perDay: "AED 180",
+    perWeek: "AED 1,050",
+    perMonth: "AED 3,495",
+    specs: [
+      { icon: Users, value: "5 seats" },
+      { icon: Fuel, value: "Petrol" },
+      { icon: Settings2, value: "Automatic" },
+    ],
+    features: ["Insurance included", "Free delivery", "Min. documents", "Bluetooth"],
   },
   {
     name: "MG ZS 2024",
     category: "SUV Car",
     badge: "Family pick",
+    image: "https://ik.imagekit.io/mpgev0ilfv/MG-ZS-2024_34101_28683585848-8_small.jpg_v=2.7?updatedAt=1737123672990",
     perDay: "AED 150",
     perWeek: "AED 910",
     perMonth: "AED 2,500",
@@ -141,6 +164,7 @@ const featuredCars = [
     name: "KIA Sportage 2024",
     category: "SUV Car",
     badge: "Top SUV",
+    image: "https://ik.imagekit.io/mpgev0ilfv/Kia-Sportage-2024_26910_24048896465-6_26910__small.jpg_v=2.7?updatedAt=1737124511221",
     perDay: "AED 180",
     perWeek: "AED 1,120",
     perMonth: "AED 4,000",
@@ -152,23 +176,10 @@ const featuredCars = [
     features: ["Insurance included", "Free delivery", "Min. documents", "Airport ready"],
   },
   {
-    name: "Hyundai Elantra 2024",
-    category: "Sedan Car",
-    badge: "Business ready",
-    perDay: "AED 180",
-    perWeek: "AED 1,050",
-    perMonth: "AED 3,495",
-    specs: [
-      { icon: Users, value: "5 seats" },
-      { icon: Fuel, value: "Petrol" },
-      { icon: Settings2, value: "Automatic" },
-    ],
-    features: ["Insurance included", "Free delivery", "Min. documents", "Bluetooth"],
-  },
-  {
     name: "Hyundai Creta 2023",
     category: "SUV Car",
     badge: "Popular SUV",
+    image: "https://ik.imagekit.io/mpgev0ilfv/Hyundai_Creta-5-Seater_2023_20327_20327_12837474624-1_small.jpg_v=2.7?updatedAt=1737123674497",
     perDay: "AED 170",
     perWeek: "AED 1,050",
     perMonth: "AED 3,300",
@@ -178,6 +189,21 @@ const featuredCars = [
       { icon: Settings2, value: "Automatic" },
     ],
     features: ["Insurance included", "Free delivery", "Min. documents", "Comfortable"],
+  },
+  {
+    name: "Mitsubishi ASX 2022",
+    category: "SUV Car",
+    badge: "Affordable SUV",
+    image: "https://ik.imagekit.io/mpgev0ilfv/Mitsubishi_ASX_2022_11576_11576_3745728660-2_small.jpg_v=2.7?updatedAt=1737124064862",
+    perDay: "AED 160",
+    perWeek: "AED 980",
+    perMonth: "AED 2,800",
+    specs: [
+      { icon: Users, value: "5 seats" },
+      { icon: Fuel, value: "Petrol" },
+      { icon: Settings2, value: "Automatic" },
+    ],
+    features: ["Insurance included", "Free delivery", "Min. documents", "Economical"],
   },
 ];
 
@@ -405,10 +431,10 @@ function App() {
             <p className="section-sub">Pick a category and check cars that fit your trip, budget, and rental duration.</p>
           </div>
           <div className="cat-grid">
-            {categories.map(({ slug, title, desc, icon: Icon, tags, cta }) => (
+            {categories.map(({ slug, title, desc, image, tags, cta }) => (
               <article className="cat-card" key={slug}>
-                <div className="cat-icon-wrap" aria-hidden="true">
-                  <Icon size={30} strokeWidth={1.9} />
+                <div className="cat-img-wrap">
+                  <img src={image} alt={`${title} rental in Dubai`} loading="lazy" />
                 </div>
                 <h3 className="cat-title">{title}</h3>
                 <p className="cat-desc">{desc}</p>
@@ -433,11 +459,11 @@ function App() {
             <p className="section-sub">Browse popular cars available for daily, weekly, and monthly rental in Dubai.</p>
           </div>
           <div className="fleet-grid">
-            {featuredCars.map(({ name, category, badge, perDay, perWeek, perMonth, specs, features }) => (
+            {featuredCars.map(({ name, category, badge, image, perDay, perWeek, perMonth, specs, features }) => (
               <article className="fleet-card" key={name}>
                 <div className="fleet-card-top">
                   <div className="fleet-img-slot" aria-label={`${name} rental car in Dubai`}>
-                    <Car size={52} strokeWidth={1.4} />
+                    <img src={image} alt={`${name} rental car Dubai`} loading="lazy" />
                   </div>
                 </div>
                 <div className="fleet-card-body">
