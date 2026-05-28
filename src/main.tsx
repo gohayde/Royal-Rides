@@ -25,88 +25,159 @@ import {
 import "./styles.css";
 
 const bookingFields = [
-  { label: "Location", value: "Dubai", icon: MapPin },
-  { label: "Pick Up", value: "Airport or Hotel", icon: Building2 },
-  { label: "Car Type", value: "SUV", icon: Car },
-  { label: "Date", value: "21 May 2025 - 25 May 2025", icon: CalendarDays },
+  { label: "Pickup Location", value: "City, airport, hotel, or address", icon: MapPin },
+  { label: "Pickup Date", value: "Select pickup date", icon: CalendarDays },
+  { label: "Drop Off Date", value: "Select return date", icon: CalendarDays },
+  { label: "Car Type", value: "Budget, sedan, or SUV", icon: Car },
 ];
 
 const trustItems = [
-  { icon: Truck, label: "Doorstep Delivery", sub: "Across all Dubai areas" },
-  { icon: Plane, label: "Airport Transfers", sub: "All major UAE airports" },
-  { icon: Clock, label: "24/7 Support", sub: "Always here to help" },
-  { icon: Banknote, label: "Transparent Pricing", sub: "No hidden charges" },
-  { icon: CalendarCheck, label: "Flexible Plans", sub: "Daily, weekly, monthly" },
+  { icon: Truck, label: "Doorstep Delivery", sub: "Delivery listed on available cars" },
+  { icon: Plane, label: "Airport Transfers", sub: "Pickup and drop off support" },
+  { icon: Shield, label: "Insurance Included", sub: "Listed on vehicle rental cards" },
+  { icon: Banknote, label: "Flexible Plans", sub: "Daily, weekly, and monthly" },
+  { icon: CalendarCheck, label: "Min. Documents", sub: "Simple document requirements" },
 ];
 
 const categories = [
   {
     slug: "sedan",
     title: "Sedan Cars",
-    desc: "Comfortable daily rentals for city drives, business trips, and simple point-to-point travel in Dubai.",
+    desc: "Comfortable cars for daily drives, business trips, and city travel in Dubai.",
     icon: Car,
     tags: ["City drives", "Business travel", "Daily rentals"],
+    cta: "View Sedans",
   },
   {
     slug: "suv",
     title: "SUV Cars",
-    desc: "Spacious rental options for families, groups, airport pickups, and longer drives around the UAE.",
+    desc: "Spacious options for families, airport runs, and longer drives around Dubai.",
     icon: Users,
     tags: ["Family trips", "Airport pickup", "Group travel"],
+    cta: "View SUVs",
   },
   {
     slug: "budget",
     title: "Budget Cars",
-    desc: "Affordable cars for everyday use, short trips, weekly rentals, and monthly plans.",
+    desc: "Affordable rental cars for simple, reliable daily transport in Dubai.",
     icon: Banknote,
     tags: ["Low cost", "Weekly plans", "Monthly rentals"],
+    cta: "View Budget Cars",
   },
 ];
 
 const featuredCars = [
   {
-    name: "Toyota Corolla",
-    category: "Sedan",
-    badge: "Popular choice",
-    specs: [
-      { icon: Users, value: "5 seats" },
-      { icon: Fuel, value: "Petrol" },
-      { icon: Settings2, value: "Automatic" },
-    ],
-    features: ["AC", "Bluetooth", "USB charging", "City-ready"],
-  },
-  {
-    name: "Nissan Sunny",
-    category: "Budget",
+    name: "KIA Picanto 2024",
+    category: "Budget Car",
     badge: "Best value",
+    perDay: "AED 120",
+    perWeek: "AED 700",
+    perMonth: "AED 1,900",
     specs: [
       { icon: Users, value: "5 seats" },
       { icon: Fuel, value: "Petrol" },
       { icon: Settings2, value: "Automatic" },
     ],
-    features: ["AC", "Economical", "Easy to park", "Daily rentals"],
+    features: ["Insurance included", "Free delivery", "Min. documents", "AC"],
   },
   {
-    name: "Toyota Fortuner",
-    category: "SUV",
-    badge: "Family favourite",
-    specs: [
-      { icon: Users, value: "7 seats" },
-      { icon: Fuel, value: "Petrol" },
-      { icon: Settings2, value: "Automatic" },
-    ],
-    features: ["4WD option", "Large boot", "Airport ready", "Family trips"],
-  },
-  {
-    name: "Mitsubishi Attrage",
-    category: "Budget",
-    badge: "Budget friendly",
+    name: "Hyundai Accent 2025",
+    category: "Sedan Car",
+    badge: "Popular choice",
+    perDay: "AED 150",
+    perWeek: "AED 910",
+    perMonth: "AED 2,500",
     specs: [
       { icon: Users, value: "5 seats" },
       { icon: Fuel, value: "Petrol" },
       { icon: Settings2, value: "Automatic" },
     ],
-    features: ["AC", "Fuel efficient", "City & highway", "Monthly plans"],
+    features: ["Insurance included", "Free delivery", "Min. documents", "Bluetooth"],
+  },
+  {
+    name: "Mazda 3 2024",
+    category: "Sedan Car",
+    badge: "City favourite",
+    perDay: "AED 170",
+    perWeek: "AED 1,050",
+    perMonth: "AED 2,700",
+    specs: [
+      { icon: Users, value: "5 seats" },
+      { icon: Fuel, value: "Petrol" },
+      { icon: Settings2, value: "Automatic" },
+    ],
+    features: ["Insurance included", "Free delivery", "Min. documents", "City-ready"],
+  },
+  {
+    name: "Nissan Sunny 2023",
+    category: "Budget Sedan",
+    badge: "Affordable pick",
+    perDay: "AED 130",
+    perWeek: "AED 700",
+    perMonth: "AED 1,850",
+    specs: [
+      { icon: Users, value: "5 seats" },
+      { icon: Fuel, value: "Petrol" },
+      { icon: Settings2, value: "Automatic" },
+    ],
+    features: ["Insurance included", "Free delivery", "Min. documents", "Economical"],
+  },
+  {
+    name: "MG ZS 2024",
+    category: "SUV Car",
+    badge: "Family pick",
+    perDay: "AED 150",
+    perWeek: "AED 910",
+    perMonth: "AED 2,500",
+    specs: [
+      { icon: Users, value: "5 seats" },
+      { icon: Fuel, value: "Petrol" },
+      { icon: Settings2, value: "Automatic" },
+    ],
+    features: ["Insurance included", "Free delivery", "Min. documents", "Spacious"],
+  },
+  {
+    name: "KIA Sportage 2024",
+    category: "SUV Car",
+    badge: "Top SUV",
+    perDay: "AED 180",
+    perWeek: "AED 1,120",
+    perMonth: "AED 4,000",
+    specs: [
+      { icon: Users, value: "5 seats" },
+      { icon: Fuel, value: "Petrol" },
+      { icon: Settings2, value: "Automatic" },
+    ],
+    features: ["Insurance included", "Free delivery", "Min. documents", "Airport ready"],
+  },
+  {
+    name: "Hyundai Elantra 2024",
+    category: "Sedan Car",
+    badge: "Business ready",
+    perDay: "AED 180",
+    perWeek: "AED 1,050",
+    perMonth: "AED 3,495",
+    specs: [
+      { icon: Users, value: "5 seats" },
+      { icon: Fuel, value: "Petrol" },
+      { icon: Settings2, value: "Automatic" },
+    ],
+    features: ["Insurance included", "Free delivery", "Min. documents", "Bluetooth"],
+  },
+  {
+    name: "Hyundai Creta 2023",
+    category: "SUV Car",
+    badge: "Popular SUV",
+    perDay: "AED 170",
+    perWeek: "AED 1,050",
+    perMonth: "AED 3,300",
+    specs: [
+      { icon: Users, value: "5 seats" },
+      { icon: Fuel, value: "Petrol" },
+      { icon: Settings2, value: "Automatic" },
+    ],
+    features: ["Insurance included", "Free delivery", "Min. documents", "Comfortable"],
   },
 ];
 
@@ -114,56 +185,56 @@ const steps = [
   {
     num: "01",
     title: "Choose Your Car",
-    desc: "Browse sedans, SUVs, and budget cars. Pick what suits your trip.",
+    desc: "Browse budget cars, sedans, and SUVs based on your trip and budget.",
   },
   {
     num: "02",
-    title: "Send a WhatsApp Inquiry",
-    desc: "Message us on WhatsApp with your dates, location, and car preference.",
+    title: "Send Your Dates",
+    desc: "Share your pickup location, pickup date, return date, and preferred car type.",
   },
   {
     num: "03",
-    title: "Confirm Rental Details",
-    desc: "We confirm availability, pricing, and any specific requirements.",
+    title: "Confirm Availability",
+    desc: "The team confirms car availability, rental plan, documents, and delivery options.",
   },
   {
     num: "04",
-    title: "Get Delivery or Pickup",
-    desc: "We deliver to your door, hotel, or airport. Or collect from our location.",
+    title: "Start Your Rental",
+    desc: "Complete the booking steps and receive the car at the agreed location.",
   },
 ];
 
 const plans = [
   {
     period: "Daily",
-    best: "Short trips and weekend getaways",
+    best: "Short errands, quick trips, and one-day travel needs",
     perks: [
-      "Flexible single-day or multi-day booking",
+      "Single-day or multi-day booking",
       "Airport pickup available",
       "Quick WhatsApp confirmation",
-      "All car types available",
+      "Budget, sedan, and SUV options",
     ],
     highlight: false,
   },
   {
     period: "Weekly",
-    best: "Visitors and short-stay residents",
+    best: "Tourists, short-stay visitors, and temporary work schedules",
     perks: [
       "7-day rental with consistent rate",
-      "Doorstep delivery included",
-      "Swap options on request",
-      "Priority WhatsApp support",
+      "Doorstep delivery listed on cars",
+      "Confirm terms via WhatsApp",
+      "All car categories available",
     ],
     highlight: true,
   },
   {
     period: "Monthly",
-    best: "Residents and long-stay professionals",
+    best: "Residents, business use, and longer stays in Dubai",
     perks: [
       "Best value per day",
-      "Full month flexible terms",
-      "Renewal on WhatsApp",
-      "Sedan, SUV, and budget available",
+      "Flexible monthly terms",
+      "Renewal via WhatsApp",
+      "Sedan, SUV, and budget cars",
     ],
     highlight: false,
   },
@@ -171,50 +242,54 @@ const plans = [
 
 const reviews = [
   {
-    name: "Sarah M.",
-    context: "Tourist, UK",
-    text: "Booking was simple and the car was delivered to our hotel on time. Exactly what we needed for our Dubai trip.",
+    name: "Junaid Ghani",
+    context: "Royal Rides customer",
+    text: "Our rent a car experience with Royal Rides Car Rental Dubai was very good. New model cars and driver service appreciated.",
   },
   {
-    name: "Ahmed K.",
-    context: "Dubai resident",
-    text: "I rent monthly and Royal Rides makes it hassle-free. Quick WhatsApp replies and transparent pricing every time.",
+    name: "Yasir Arafat",
+    context: "Royal Rides customer",
+    text: "Very good experience with Royal Rides Car Rental Dubai. New model cars, good service, and easy to deal with.",
   },
   {
-    name: "Priya R.",
-    context: "Family traveller",
-    text: "Got a clean SUV delivered to Dubai Airport. The whole process took a few WhatsApp messages. Really easy.",
+    name: "Dubai Resident",
+    context: "Monthly rental customer",
+    text: "Renting monthly with Royal Rides is straightforward. Quick replies via WhatsApp and clear rental terms every time.",
   },
 ];
 
 const faqs = [
   {
-    q: "Do you offer doorstep delivery in Dubai?",
-    a: "Yes. We deliver to your home, hotel, or any location across Dubai. Just let us know your address when you book.",
+    q: "What types of cars can I rent from Royal Rides?",
+    a: "Royal Rides offers budget cars, sedan cars, and SUV cars for rental in Dubai. The fleet includes models from KIA, Hyundai, Mazda, MG, Nissan, and more.",
   },
   {
-    q: "Can I book through WhatsApp?",
-    a: "Yes. WhatsApp is our primary booking channel. Message us with your car type, dates, and pickup location and we'll confirm availability fast.",
+    q: "Can I rent a car daily, weekly, or monthly?",
+    a: "Yes. The listed cars include daily, weekly, and monthly rental pricing options. Monthly plans typically offer the best value per day.",
   },
   {
-    q: "Do you offer airport transfers?",
-    a: "Yes. We cover all major UAE airports including Dubai International (DXB) and Al Maktoum (DWC). We coordinate pickup timing with your flight.",
+    q: "How do I check if a car is available?",
+    a: "Send your preferred car, pickup location, pickup date, and return date through WhatsApp at +971 56 361 9373 or use the booking form above.",
   },
   {
-    q: "Can I rent daily, weekly, or monthly?",
-    a: "Yes. We offer daily, weekly, and monthly rental plans across all car categories. Monthly plans give the best daily rate.",
+    q: "Do you offer doorstep delivery?",
+    a: "Free delivery is mentioned on the listed vehicle cards. Confirm availability and your delivery location with the team before booking.",
   },
   {
-    q: "What car types are available?",
-    a: "We offer sedan cars, SUVs, and budget cars. Each category has multiple options depending on availability.",
+    q: "Are airport transfers available?",
+    a: "Airport transfer support is available. Message Royal Rides on WhatsApp to confirm timing, pickup location, and availability for your flight.",
   },
   {
-    q: "Are prices transparent?",
-    a: "Yes. We share full pricing upfront via WhatsApp before you confirm. No hidden fees or surprise charges.",
+    q: "Is insurance included?",
+    a: "Insurance included is listed on the vehicle rental cards. Ask the team to confirm the exact rental terms for your specific booking.",
   },
   {
-    q: "Do you provide 24/7 support?",
-    a: "Yes. Our support team is available around the clock via WhatsApp for any questions, changes, or assistance during your rental.",
+    q: "What documents are required to rent a car?",
+    a: "The website mentions minimum documents required. Contact Royal Rides directly at +971 56 361 9373 for the exact documents needed for your rental.",
+  },
+  {
+    q: "How can I contact Royal Rides?",
+    a: "Call or WhatsApp Royal Rides at +971 56 361 9373. You can also email royalridescarrental@gmail.com. The team is available from 09:00 to 22:00, Monday to Sunday.",
   },
 ];
 
@@ -252,32 +327,33 @@ function App() {
 
           <nav className="nav-links" aria-label="Main links">
             <a className="active" href="#home">Home</a>
-            <a href="#fleet">Fleet</a>
-            <a href="#services">Services</a>
-            <a href="#about">About Us</a>
+            <a href="#fleet">Cars</a>
+            <a href="#plans">Rental Plans</a>
+            <a href="#delivery">Airport Transfers</a>
             <a href="#contact">Contact</a>
           </nav>
 
           <div className="nav-actions">
-            <a className="call-btn" href="tel:+971000000000" aria-label="Call Royal Rides">
+            <a className="call-btn" href="tel:+971563619373" aria-label="Call Royal Rides">
               <Phone size={21} strokeWidth={2.6} />
               <span>Call</span>
             </a>
-            <a className="book-btn" href="https://wa.me/" aria-label="Book Royal Rides on WhatsApp">
+            <a className="book-btn" href="https://wa.me/971563619373" aria-label="Book Royal Rides on WhatsApp">
               Book Now
             </a>
           </div>
         </header>
 
         <div className="hero-copy">
+          <span className="hero-eyebrow">Car rental in Dubai</span>
           <h1>
-            <span>Rent Your</span>
-            <span className="accent">Perfect Ride</span>
-            <span>In Dubai</span>
+            <span>Affordable</span>
+            <span className="accent">Car Rental</span>
+            <span>in Dubai</span>
           </h1>
           <p>
-            Affordable sedans, SUVs, and family-friendly rentals with easy booking and
-            fast support across Dubai.
+            Choose from budget cars, sedans, and SUVs with daily, weekly, and monthly
+            rental options. Simple booking via WhatsApp.
           </p>
         </div>
 
@@ -324,11 +400,12 @@ function App() {
       <section className="section categories-section" id="fleet" aria-label="Car categories">
         <div className="section-inner">
           <div className="section-header">
-            <h2 className="section-title">Find the Right Car</h2>
-            <p className="section-sub">Three simple categories. Sedans for city travel, SUVs for families, budget cars for everyday use.</p>
+            <span className="eyebrow">Choose your car type</span>
+            <h2 className="section-title">What Type of Car Are You Looking For?</h2>
+            <p className="section-sub">Pick a category and check cars that fit your trip, budget, and rental duration.</p>
           </div>
           <div className="cat-grid">
-            {categories.map(({ slug, title, desc, icon: Icon, tags }) => (
+            {categories.map(({ slug, title, desc, icon: Icon, tags, cta }) => (
               <article className="cat-card" key={slug}>
                 <div className="cat-icon-wrap" aria-hidden="true">
                   <Icon size={30} strokeWidth={1.9} />
@@ -338,8 +415,8 @@ function App() {
                 <ul className="cat-tags" aria-label="Category highlights">
                   {tags.map((t) => <li key={t}>{t}</li>)}
                 </ul>
-                <a className="cat-cta" href="https://wa.me/" aria-label={`View ${title}`}>
-                  View Category
+                <a className="cat-cta" href="https://wa.me/971563619373" aria-label={`View ${title}`}>
+                  {cta}
                 </a>
               </article>
             ))}
@@ -351,14 +428,15 @@ function App() {
       <section className="section fleet-section" aria-label="Featured rental cars">
         <div className="section-inner">
           <div className="section-header">
-            <h2 className="section-title">Popular Rental Cars</h2>
-            <p className="section-sub">A snapshot of cars we frequently rent out. Ask us for current availability via WhatsApp.</p>
+            <span className="eyebrow">Featured rentals</span>
+            <h2 className="section-title">Find Your Best Car Here</h2>
+            <p className="section-sub">Browse popular cars available for daily, weekly, and monthly rental in Dubai.</p>
           </div>
           <div className="fleet-grid">
-            {featuredCars.map(({ name, category, badge, specs, features }) => (
+            {featuredCars.map(({ name, category, badge, perDay, perWeek, perMonth, specs, features }) => (
               <article className="fleet-card" key={name}>
                 <div className="fleet-card-top">
-                  <div className="fleet-img-slot" aria-label={`${name} image`}>
+                  <div className="fleet-img-slot" aria-label={`${name} rental car in Dubai`}>
                     <Car size={52} strokeWidth={1.4} />
                   </div>
                 </div>
@@ -376,6 +454,11 @@ function App() {
                       </li>
                     ))}
                   </ul>
+                  <div className="fleet-pricing" aria-label="Rental pricing">
+                    <span><strong>{perDay}</strong> / day</span>
+                    <span><strong>{perWeek}</strong> / week</span>
+                    <span><strong>{perMonth}</strong> / month</span>
+                  </div>
                   <ul className="fleet-features" aria-label="Car features">
                     {features.map((f) => (
                       <li key={f}>
@@ -384,9 +467,14 @@ function App() {
                       </li>
                     ))}
                   </ul>
-                  <a className="fleet-cta" href="https://wa.me/" aria-label={`Check availability for ${name}`}>
-                    Check Availability
-                  </a>
+                  <div className="fleet-actions">
+                    <a className="fleet-cta" href="https://wa.me/971563619373" aria-label={`WhatsApp about ${name}`}>
+                      WhatsApp
+                    </a>
+                    <a className="fleet-cta-secondary" href="tel:+971563619373" aria-label={`Call about ${name}`}>
+                      Call Now
+                    </a>
+                  </div>
                 </div>
               </article>
             ))}
@@ -395,20 +483,20 @@ function App() {
       </section>
 
       {/* ── DELIVERY & AIRPORT ───────────────────────────────────── */}
-      <section className="section delivery-section" aria-label="Doorstep delivery and airport transfers">
+      <section className="section delivery-section" id="delivery" aria-label="Doorstep delivery and airport transfers">
         <div className="section-inner delivery-inner">
           <div className="delivery-copy">
-            <span className="eyebrow">Delivery and Transfers</span>
-            <h2 className="section-title">We Come to You</h2>
+            <span className="eyebrow">Easy pickup and delivery</span>
+            <h2 className="section-title">Car Rental Made Simple Across Dubai</h2>
             <p className="delivery-body">
-              No need to travel to a rental office. Royal Rides delivers your car directly to your door, hotel, or airport terminal across Dubai.
+              Need the car at your hotel, home, office, or airport? Message Royal Rides to check delivery and pickup options for your booking.
             </p>
             <ul className="delivery-list" role="list">
               {[
-                { icon: Truck, text: "Doorstep delivery across all Dubai areas" },
-                { icon: Plane, text: "Dubai International (DXB) and Al Maktoum (DWC) airports" },
-                { icon: Building2, text: "Hotel and serviced apartment delivery" },
-                { icon: MessageCircle, text: "Coordinate everything on WhatsApp" },
+                { icon: Truck, text: "Request delivery to your preferred Dubai location" },
+                { icon: Plane, text: "Airport pickup or drop off support available" },
+                { icon: Building2, text: "Hotel and serviced apartment delivery on request" },
+                { icon: MessageCircle, text: "Confirm everything directly via WhatsApp" },
               ].map(({ icon: Icon, text }) => (
                 <li key={text}>
                   <span className="delivery-icon" aria-hidden="true"><Icon size={18} strokeWidth={2} /></span>
@@ -416,21 +504,21 @@ function App() {
                 </li>
               ))}
             </ul>
-            <a className="primary-btn" href="https://wa.me/" aria-label="Book delivery on WhatsApp">
+            <a className="primary-btn" href="https://wa.me/971563619373" aria-label="Ask about delivery on WhatsApp">
               <MessageCircle size={20} strokeWidth={2.2} />
-              WhatsApp Us
+              Ask on WhatsApp
             </a>
           </div>
           <div className="delivery-cards" aria-hidden="true">
             <div className="delivery-card dc-main">
               <div className="dc-icon"><Truck size={28} strokeWidth={1.9} /></div>
               <strong>Doorstep Delivery</strong>
-              <span>We bring your rental directly to you, anywhere in Dubai.</span>
+              <span>Request car delivery to your Dubai location, subject to availability.</span>
             </div>
             <div className="delivery-card dc-alt">
               <div className="dc-icon"><Plane size={28} strokeWidth={1.9} /></div>
-              <strong>Airport Transfers</strong>
-              <span>Ready at arrivals when your flight lands.</span>
+              <strong>Airport Transfer Support</strong>
+              <span>Arrange airport pickup or drop off for a smoother arrival.</span>
             </div>
           </div>
         </div>
@@ -440,8 +528,9 @@ function App() {
       <section className="section process-section" aria-label="How to rent a car from Royal Rides">
         <div className="section-inner">
           <div className="section-header">
-            <h2 className="section-title">How It Works</h2>
-            <p className="section-sub">Four simple steps from browsing to getting your keys.</p>
+            <span className="eyebrow">How it works</span>
+            <h2 className="section-title">A Simple Way to Rent Your Car</h2>
+            <p className="section-sub">Choose your car, share your details, confirm availability, and get ready for your rental.</p>
           </div>
           <ol className="process-list" role="list">
             {steps.map(({ num, title, desc }) => (
@@ -458,11 +547,12 @@ function App() {
       </section>
 
       {/* ── RENTAL PLANS ─────────────────────────────────────────── */}
-      <section className="section plans-section" aria-label="Rental plans">
+      <section className="section plans-section" id="plans" aria-label="Rental plans">
         <div className="section-inner">
           <div className="section-header">
-            <h2 className="section-title">Rental Plans</h2>
-            <p className="section-sub">Daily, weekly, or monthly. Pick a plan that fits your schedule.</p>
+            <span className="eyebrow">Rental plans</span>
+            <h2 className="section-title">Daily, Weekly, and Monthly Car Rentals</h2>
+            <p className="section-sub">Pick a rental duration that fits your stay, routine, or business travel needs in Dubai.</p>
           </div>
           <div className="plans-grid">
             {plans.map(({ period, best, perks, highlight }) => (
@@ -478,7 +568,7 @@ function App() {
                     </li>
                   ))}
                 </ul>
-                <a className={`plan-cta${highlight ? " plan-cta-primary" : ""}`} href="https://wa.me/" aria-label={`WhatsApp about ${period} rental`}>
+                <a className={`plan-cta${highlight ? " plan-cta-primary" : ""}`} href="https://wa.me/971563619373" aria-label={`WhatsApp about ${period} rental`}>
                   <MessageCircle size={18} strokeWidth={2.2} />
                   WhatsApp Now
                 </a>
@@ -493,7 +583,7 @@ function App() {
         <div className="section-inner">
           <div className="section-header">
             <h2 className="section-title">What Customers Say</h2>
-            <p className="section-sub">Real feedback from people who've rented with Royal Rides.</p>
+            <p className="section-sub">Feedback shared by customers who have rented with Royal Rides Car Rental Dubai.</p>
           </div>
           <div className="reviews-grid">
             {reviews.map(({ name, context, text }) => (
@@ -519,7 +609,7 @@ function App() {
         <div className="section-inner faq-inner">
           <div className="section-header faq-header">
             <h2 className="section-title">Frequently Asked Questions</h2>
-            <p className="section-sub">Quick answers about booking, delivery, and rentals.</p>
+            <p className="section-sub">Quick answers before you book your rental car in Dubai.</p>
           </div>
           <div className="faq-list" role="list">
             {faqs.map(({ q, a }) => <FaqItem key={q} q={q} a={a} />)}
@@ -531,15 +621,16 @@ function App() {
       <section className="section final-cta-section" aria-label="Book a rental car">
         <div className="section-inner final-cta-inner">
           <div className="final-cta-copy">
-            <h2 className="final-cta-title">Ready to Rent in Dubai?</h2>
-            <p className="final-cta-sub">Message us on WhatsApp and we'll get you sorted. Sedan, SUV, or budget. Daily, weekly, or monthly. We'll handle the rest.</p>
+            <h2 className="final-cta-title">Need a Rental Car in Dubai?</h2>
+            <p className="final-cta-sub">Message Royal Rides with your dates, pickup location, and preferred car type. The team will help you check availability and rental options.</p>
+            <p className="final-cta-trust">Budget cars, sedans, and SUVs available with daily, weekly, and monthly plans.</p>
             <div className="final-cta-actions">
-              <a className="primary-btn" href="https://wa.me/" aria-label="WhatsApp Royal Rides">
+              <a className="primary-btn" href="https://wa.me/971563619373" aria-label="WhatsApp Royal Rides">
                 <MessageCircle size={20} strokeWidth={2.2} />
                 WhatsApp Now
               </a>
-              <a className="secondary-btn" href="#fleet" aria-label="Browse rental cars">
-                Browse Cars
+              <a className="secondary-btn" href="tel:+971563619373" aria-label="Call Royal Rides">
+                Call Now
               </a>
             </div>
           </div>
@@ -560,42 +651,49 @@ function App() {
               </span>
               <span>Royal Rides</span>
             </a>
-            <p className="footer-tagline">Affordable car rental in Dubai. Sedan, SUV, and budget cars with doorstep delivery and 24/7 support.</p>
-            <a className="footer-wa" href="https://wa.me/" aria-label="WhatsApp Royal Rides">
+            <p className="footer-tagline">Affordable car rental in Dubai with budget cars, sedans, SUVs, and flexible daily, weekly, and monthly rental options.</p>
+            <a className="footer-wa" href="https://wa.me/971563619373" aria-label="WhatsApp Royal Rides">
               <MessageCircle size={18} strokeWidth={2.2} />
-              WhatsApp Us
+              WhatsApp Now
+            </a>
+            <a className="footer-phone" href="tel:+971563619373" aria-label="Call Royal Rides">
+              <Phone size={18} strokeWidth={2.2} />
+              +971 56 361 9373
+            </a>
+            <a className="footer-email" href="mailto:royalridescarrental@gmail.com" aria-label="Email Royal Rides">
+              royalridescarrental@gmail.com
             </a>
           </div>
 
           <nav className="footer-links" aria-label="Footer navigation">
             <div className="footer-col">
               <h4>Quick Links</h4>
-              <a href="#fleet">Fleet</a>
-              <a href="#services">Services</a>
-              <a href="#about">About Us</a>
-              <a href="#contact">Contact</a>
+              <a href="#fleet">Cars</a>
+              <a href="#plans">Rental Plans</a>
+              <a href="#delivery">Airport Transfers</a>
+              <a href="#contact">Contact Us</a>
             </div>
             <div className="footer-col">
               <h4>Car Types</h4>
-              <a href="#fleet">Sedan Cars</a>
-              <a href="#fleet">SUV Cars</a>
-              <a href="#fleet">Budget Cars</a>
+              <a href="#fleet">Sedan Car Rental</a>
+              <a href="#fleet">SUV Car Rental</a>
+              <a href="#fleet">Budget Car Rental</a>
             </div>
             <div className="footer-col">
-              <h4>Services</h4>
-              <a href="#services">Doorstep Delivery</a>
-              <a href="#services">Airport Transfers</a>
-              <a href="#services">Daily Rentals</a>
-              <a href="#services">Weekly Rentals</a>
-              <a href="#services">Monthly Rentals</a>
+              <h4>Rental Plans</h4>
+              <a href="#plans">Daily Car Rental</a>
+              <a href="#plans">Weekly Car Rental</a>
+              <a href="#plans">Monthly Car Rental</a>
+              <a href="#delivery">Doorstep Delivery</a>
+              <a href="#delivery">Airport Transfers</a>
             </div>
           </nav>
         </div>
 
         <div className="footer-bottom">
           <div className="section-inner footer-bottom-inner">
-            <span>Dubai, UAE</span>
-            <span>© {new Date().getFullYear()} Royal Rides Car Rental. All rights reserved.</span>
+            <span>Al Karama, Dubai, UAE · Mon–Sun 09:00–22:00</span>
+            <span>© {new Date().getFullYear()} Royal Rides Car Rental Dubai. All rights reserved.</span>
             <span className="footer-legal">
               <a href="#">Privacy Policy</a>
               <a href="#">Terms of Use</a>
