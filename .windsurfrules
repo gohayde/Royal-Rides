@@ -1,0 +1,41 @@
+# Windsurf Rules
+
+Read `AGENTS.md` first.
+Treat `AGENTS.md` as the master source of truth.
+Use the `/docs` folder for detailed build, stack, design, content, component, performance, and QA rules.
+
+Project:
+Royal Rides Car Rental
+Affordable car rental agency website in Dubai, UAE
+
+Main goal:
+Generate WhatsApp inquiries, booking requests, and fleet browsing.
+
+Required stack:
+Vite
+React
+TypeScript
+Tailwind CSS
+React Router
+shadcn/ui
+Radix UI
+Lucide icons
+Framer Motion
+GSAP
+ScrollTrigger
+Lenis
+
+Do not use:
+Next.js
+Astro
+Remix
+Backend code
+Database
+Authentication
+CMS
+Payment processing
+
+Do not delete unrelated files.
+Do not rewrite unrelated files.
+Inspect the repo before editing.
+Build from the required homepage sitemap in `AGENTS.md`.
